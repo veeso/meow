@@ -8,6 +8,7 @@
 
 [![ci](https://github.com/veeso/meow/workflows/CI/badge.svg)](https://github.com/veeso/meow/actions)
 [![license-mit](https://img.shields.io/badge/License-MIT-teal.svg)](https://opensource.org/licenses/MIT)
+
 ![Ethereum](https://img.shields.io/badge/Ethereum-3C3C3D?style=for-the-badge&logo=Ethereum&logoColor=white)
 
 ## Setup
