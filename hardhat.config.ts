@@ -12,6 +12,11 @@ const config: HardhatUserConfig = {
       accounts: [`0x${PRIVATE_KEY}`],
     },
   },
+  gasReporter: {
+    currency: "USD",
+    gasPriceApi:
+      "https://api.polygonscan.com/api?module=proxy&action=eth_gasPrice",
+  },
 };
 
 export default config;
