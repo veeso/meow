@@ -1,28 +1,12 @@
-
-import * as React from 'react';
+import * as React from "react";
 import { hot } from "react-hot-loader/root";
-import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import { MetaMaskProvider } from "metamask-react";
 
-interface Props {
-   name:
-    string
-}
-
-class App extends React.Component<Props> {
-  render() {
-    const { name } = this.props;
-    return (
-      <>
-        <h1>
-          Hello {name}
-        </h1>
-        <button type="button" class="btn btn-primary">
-          This is a bootstrap button
-        </button>
-      </>
-    );
-  }
-}
+const App = () => (
+  <MetaMaskProvider>
+    <h1>Ciao</h1>
+  </MetaMaskProvider>
+);
 
 export default hot(App);
