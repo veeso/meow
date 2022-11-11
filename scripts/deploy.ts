@@ -1,18 +1,27 @@
 import { ethers } from "hardhat";
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
-
-  const lockedAmount = ethers.utils.parseEther("1");
-
-  const Lock = await ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
-
-  await lock.deployed();
-
-  console.log(`Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`);
+  // deploy meow storage
+  const MeowStorage = await ethers.getContractFactory("MeowStorage");
+  const meowStorageContract = await MeowStorage.deploy();
+  await meowStorageContract.deployed();
+  console.log(`MeowStorage deployed to ${meowStorageContract.address}`);
+  // deploy user
+  const UserStorage = await ethers.getContractFactory("UserStorage");
+  const userStorageContract = await UserStorage.deploy();
+  await userStorageContract.deployed();
+  console.log(`UserStorage deployed to ${userStorageContract.address}`);
+  // deploy manager
+  const ContractManager = await ethers.getContractFactory("ContractManager");
+  const contractManager = await ContractManager.deploy();
+  await contractManager.deployed();
+  console.log(`ContractManager deployed to ${contractManager.address}`);
+  await contractManager.setAddress("MeowStorage", meowStorageContract.address);
+  await contractManager.setAddress("UserStorage", userStorageContract.address);
+  // configure address for manager to storage
+  await meowStorageContract.setManagerAddr(contractManager.address);
+  await userStorageContract.setManagerAddr(contractManager.address);
+  console.log("manager address configured into storage");
 }
 
 // We recommend this pattern to be able to use async/await everywhere

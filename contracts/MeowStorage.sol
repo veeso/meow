@@ -4,41 +4,56 @@ pragma solidity ^0.8.9;
 // Uncomment this line to use console.log
 // import "hardhat/console.sol";
 
+import "./helpers/BaseStorage.sol";
+import "./ContractManager.sol";
+import "./UserStorage.sol";
+
 /**
  * @title MeowStorage
  * @author Christian "veeso" Visintin <christian.visintin1997@gmail.com>
  */
-contract MeowStorage {
+contract MeowStorage is BaseStorage {
     event MeowPublished(uint256 recipient, uint256 meowId);
 
     struct Meow {
         uint256 id;
         string text;
         string[] hashtags;
-        uint128 _epoch;
+        uint128 epoch;
     }
+    uint256 lastMeowId;
 
-    Meow[] private meows;
+    // map between meow id and meow entity
+    mapping(uint256 => Meow) meows;
 
     // Mapping of Meow id to the profile id of the author
     mapping(uint256 => uint256) meowToProfile;
 
     /// @notice Publish a new Meow
     /// @dev Explain to a developer any extra details
-    /// @param _profileId that published the message
     /// @param _text meow text
     /// @param _hashtags associated to meow
     /// @param _epoch of the publication time
     function publish(
-        uint256 _profileId,
         string memory _text,
         string[] memory _hashtags,
         uint128 _epoch
     ) external {
-        uint256 meowId = meows.length;
-        meows.push(Meow(meowId, _text, _hashtags, _epoch));
-        meowToProfile[meowId] = _profileId;
-        emit MeowPublished(_profileId, meowId);
+        // check text length
+        require(bytes(_text).length <= 256);
+        // get manager
+        ContractManager _manager = ContractManager(managerAddr);
+        // retrieve address for user storage
+        address _userStorageAddr = _manager.getAddress("UserStorage");
+        UserStorage _userStorage = UserStorage(_userStorageAddr);
+        // user must exist
+        require(_userStorage.profileExists(tx.origin));
+        uint256 _profileId = _userStorage.addressToId(tx.origin);
+        // increase id by 1
+        lastMeowId++;
+        meows[lastMeowId] = Meow(lastMeowId, _text, _hashtags, _epoch);
+        meowToProfile[lastMeowId] = _profileId;
+        emit MeowPublished(_profileId, lastMeowId);
     }
 
     /// @notice get meow by id
@@ -50,27 +65,28 @@ contract MeowStorage {
 
     /// @notice get meows associated to author in provided range
     /// @dev For performance reasons range must be provided
-    /// @param _author meow author id
+    /// @param _profileId meow profile id
     /// @param _offset start offset position to get meows from
     /// @param _count amount of meows to get
     /// @return meows user's meows in range
-    function getMeowsForAuthor(
-        uint256 _author,
+    function getMeowsForProfile(
+        uint256 _profileId,
         uint256 _offset,
         uint256 _count
     ) external view returns (Meow[] memory) {
-        uint256 skipped = 0;
-        Meow[] memory result = new Meow[](_count);
-        for (uint256 i = 0; i < meows.length && result.length < _count; i++) {
-            if (meowToProfile[i] == _author) {
-                if (skipped < _offset) {
-                    skipped++;
-                } else {
-                    result[i] = meows[i];
-                }
+        uint256 _resultIndex = 0;
+        Meow[] memory _result = new Meow[](_count);
+        for (
+            uint256 i = _offset + 1;
+            i <= lastMeowId && _resultIndex < _count;
+            i++
+        ) {
+            if (meowToProfile[i] == _profileId) {
+                _result[_resultIndex] = meows[i];
+                _resultIndex++;
             }
         }
-        return result;
+        return _result;
     }
 
     /// @notice get meows which contains the provided hashtag
@@ -84,18 +100,19 @@ contract MeowStorage {
         uint256 _offset,
         uint256 _count
     ) external view returns (Meow[] memory) {
-        uint256 skipped = 0;
-        Meow[] memory result = new Meow[](_count);
-        for (uint256 i = 0; i < meows.length && result.length < _count; i++) {
+        uint256 _resultIndex = 0;
+        Meow[] memory _result = new Meow[](_count);
+        for (
+            uint256 i = _offset + 1;
+            i <= lastMeowId && _resultIndex < _count;
+            i++
+        ) {
             if (hashtagsContains(meows[i].hashtags, _hashtag)) {
-                if (skipped < _offset) {
-                    skipped++;
-                } else {
-                    result[i] = meows[i];
-                }
+                _result[_resultIndex] = meows[i];
+                _resultIndex++;
             }
         }
-        return result;
+        return _result;
     }
 
     /// @notice Checks whether meow hashtags contain provided argument
