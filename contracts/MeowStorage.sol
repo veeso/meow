@@ -76,10 +76,11 @@ contract MeowStorage is BaseStorage {
     ) external view returns (Meow[] memory) {
         uint256 _resultIndex = 0;
         Meow[] memory _result = new Meow[](_count);
+        uint256 _cursor = lastMeowId - _offset;
         for (
-            uint256 i = _offset + 1;
-            i <= lastMeowId && _resultIndex < _count;
-            i++
+            uint256 i = _cursor;
+            i >= _cursor - _count && _resultIndex < _count;
+            i--
         ) {
             if (meowToProfile[i] == _profileId) {
                 _result[_resultIndex] = meows[i];
@@ -102,10 +103,11 @@ contract MeowStorage is BaseStorage {
     ) external view returns (Meow[] memory) {
         uint256 _resultIndex = 0;
         Meow[] memory _result = new Meow[](_count);
+        uint256 _cursor = lastMeowId - _offset;
         for (
-            uint256 i = _offset + 1;
-            i <= lastMeowId && _resultIndex < _count;
-            i++
+            uint256 i = _cursor;
+            i >= _cursor - _count && _resultIndex < _count;
+            i--
         ) {
             if (hashtagsContains(meows[i].hashtags, _hashtag)) {
                 _result[_resultIndex] = meows[i];

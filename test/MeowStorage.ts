@@ -122,7 +122,8 @@ describe("MeowStorage", function () {
       BigNumber.from(2)
     );
     expect(meows.length).to.be.equal(2);
-    expect(meows[0].id.toNumber()).to.be.equal(1);
+    expect(meows[0].id.toNumber()).to.be.equal(5);
+    expect(meows[1].id.toNumber()).to.be.equal(4);
     meows = await meowStorage.getMeowsForProfile(
       BigNumber.from(1),
       BigNumber.from(2),
@@ -130,6 +131,8 @@ describe("MeowStorage", function () {
     );
     expect(meows.length).to.be.equal(3);
     expect(meows[0].id.toNumber()).to.be.equal(3);
+    expect(meows[1].id.toNumber()).to.be.equal(2);
+    expect(meows[2].id.toNumber()).to.be.equal(1);
   });
 
   it("should return meows by hashtags", async () => {
@@ -147,7 +150,7 @@ describe("MeowStorage", function () {
       BigNumber.from(2)
     );
     expect(meows.length).to.be.equal(2);
-    expect(meows[0].id.toNumber()).to.be.equal(3);
-    expect(meows[1].id.toNumber()).to.be.equal(5);
+    expect(meows[0].id.toNumber()).to.be.equal(5);
+    expect(meows[1].id.toNumber()).to.be.equal(3);
   });
 });
