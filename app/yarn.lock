@@ -1080,6 +1080,11 @@
     uncontrollable "^7.2.1"
     warning "^4.0.3"
 
+"@types/autosize@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@types/autosize/-/autosize-4.0.1.tgz#999a7c305b96766248044ebaac1a0299961f3b61"
+  integrity sha512-iPJT/FCaSO79G6j+9n6gmFc5nhxZ1gDrA2UAvb5FslJ6FJQZnDfbBU0qp5vpp0Cbjj7+gOyjuWZ7RrXvRuETaA==
+
 "@types/body-parser@*":
   version "1.19.2"
   resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.19.2.tgz#aea2059e28b7658639081347ac4fab3de166e6f0"
@@ -1155,6 +1160,11 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
+"@types/history@^4.7.11":
+  version "4.7.11"
+  resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.11.tgz#56588b17ae8f50c53983a524fc3cc47437969d64"
+  integrity sha512-qjDJRrmvBMiTx+jyLxvLfJU7UznFuokDv4f3WRuriHKERccVpFU+8XMQUAbDzoiJCsmexxRExQeMwwCdamSKDA==
+
 "@types/hoist-non-react-statics@*":
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz#1124aafe5118cb591977aeb1ceaaed1070eb039f"
@@ -1205,6 +1215,23 @@
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.0.8.tgz#d2606d855186cd42cc1b11e63a71c39525441685"
   integrity sha512-C3GYO0HLaOkk9dDAz3Dl4sbe4AKUGTCfFIZsz3n/82dPNN8Du533HzKatDxeUYWu24wJgMP1xICqkWk1YOLOIw==
   dependencies:
+    "@types/react" "*"
+
+"@types/react-router-dom@^5.3.3":
+  version "5.3.3"
+  resolved "https://registry.yarnpkg.com/@types/react-router-dom/-/react-router-dom-5.3.3.tgz#e9d6b4a66fcdbd651a5f106c2656a30088cc1e83"
+  integrity sha512-kpqnYK4wcdm5UaWI3fLcELopqLrHgLqNsdpHauzlQktfkHL3npOSwtj1Uz9oKBAzs7lFtVkV8j83voAz2D8fhw==
+  dependencies:
+    "@types/history" "^4.7.11"
+    "@types/react" "*"
+    "@types/react-router" "*"
+
+"@types/react-router@*":
+  version "5.1.19"
+  resolved "https://registry.yarnpkg.com/@types/react-router/-/react-router-5.1.19.tgz#9b404246fba7f91474d7008a3d48c17b6e075ad6"
+  integrity sha512-Fv/5kb2STAEMT3wHzdKQK2z8xKq38EDIGVrutYLmQVVLe+4orDFquU52hQrULnEHinMKv9FSA6lf9+uNT1ITtA==
+  dependencies:
+    "@types/history" "^4.7.11"
     "@types/react" "*"
 
 "@types/react-transition-group@^4.4.4":
@@ -1517,6 +1544,11 @@ array-flatten@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/array-flatten/-/array-flatten-2.1.2.tgz#24ef80a28c1a893617e2149b0c6d0d788293b099"
   integrity sha512-hNfzcOV8W4NdualtqBFPyVO+54DSJuZGY9qT4pRroB6S9e3iiido2ISIC5h9R2sPJ8H3FHCIiEnsv1lPXO3KtQ==
+
+autosize@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/autosize/-/autosize-5.0.1.tgz#ed269b0fa9b7eb47627048a1bb3299e99e003a0f"
+  integrity sha512-UIWUlE4TOVPNNj2jjrU39wI4hEYbneUypEqcyRmRFIx5CC2gNdg3rQr+Zh7/3h6egbBvm33TDQjNQKtj9Tk1HA==
 
 babel-loader@^9.1.0:
   version "9.1.0"
@@ -3061,6 +3093,11 @@ react-bootstrap@^2.6.0:
     uncontrollable "^7.2.1"
     warning "^4.0.3"
 
+react-content-loader@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/react-content-loader/-/react-content-loader-6.2.0.tgz#cd8fee8160b8fda6610d0c69ce5aee7b8094cba6"
+  integrity sha512-r1dI6S+uHNLW68qraLE2njJYOuy6976PpCExuCZUcABWbfnF3FMcmuESRI8L4Bj45wnZ7n8g71hkPLzbma7/Cw==
+
 react-dom@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.2.0.tgz#22aaf38708db2674ed9ada224ca4aa708d821e3d"
@@ -3083,6 +3120,13 @@ react-hot-loader@^4.13.0:
     shallowequal "^1.1.0"
     source-map "^0.7.3"
 
+react-infinite-scroll-component@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/react-infinite-scroll-component/-/react-infinite-scroll-component-6.1.0.tgz#7e511e7aa0f728ac3e51f64a38a6079ac522407f"
+  integrity sha512-SQu5nCqy8DxQWpnUVLx7V7b7LcA37aM7tvoWjTLZp1dk6EJibM5/4EJKzOnl07/BsM1Y40sKLuqjCwwH/xV0TQ==
+  dependencies:
+    throttle-debounce "^2.1.0"
+
 react-is@^16.13.1, react-is@^16.3.2, react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
@@ -3093,7 +3137,15 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-router@^6.4.3:
+react-router-dom@^6.4.3:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.4.3.tgz#70093b5f65f85f1df9e5d4182eb7ff3a08299275"
+  integrity sha512-MiaYQU8CwVCaOfJdYvt84KQNjT78VF0TJrA17SIQgNHRvLnXDJO6qsFqq8F/zzB1BWZjCFIrQpu4QxcshitziQ==
+  dependencies:
+    "@remix-run/router" "1.0.3"
+    react-router "6.4.3"
+
+react-router@6.4.3:
   version "6.4.3"
   resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.4.3.tgz#9ed3ee4d6e95889e9b075a5d63e29acc7def0d49"
   integrity sha512-BT6DoGn6aV1FVP5yfODMOiieakp3z46P1Fk0RNzJMACzE7C339sFuHebfvWtnB4pzBvXXkHP2vscJzWRuUjTtA==
@@ -3570,6 +3622,11 @@ terser@^5.14.1:
     acorn "^8.5.0"
     commander "^2.20.0"
     source-map-support "~0.5.20"
+
+throttle-debounce@^2.1.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/throttle-debounce/-/throttle-debounce-2.3.0.tgz#fd31865e66502071e411817e241465b3e9c372e2"
+  integrity sha512-H7oLPV0P7+jgvrk+6mwwwBDmxTaxnu9HMXmloNLXwnNO0ZxZ31Orah2n8lU1eMPvsaowP2CX+USCgyovXfdOFQ==
 
 thunky@^1.0.2:
   version "1.1.0"

@@ -1,6 +1,5 @@
 import * as React from "react";
 import { hot } from "react-hot-loader/root";
-import styled from "styled-components";
 import Button from "react-bootstrap/Button";
 import { useMetaMask } from "metamask-react";
 import Logo from "./MetamaskConnect/Logo";
