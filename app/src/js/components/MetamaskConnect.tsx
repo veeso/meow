@@ -22,12 +22,18 @@ const MetamaskConnect = () => {
     return undefined;
   };
 
+  const addressText = (address: string) => {
+    return `${address.substring(0, 6)}...${address.substring(
+      address.length - 4
+    )}`;
+  };
+
   const text = () => {
     if (status === "initializing") return "Initializing...";
     if (status === "unavailable") return "MetaMask not available";
     if (status === "notConnected") return "Connect to MetaMask";
     if (status === "connecting") return "Connecting...";
-    if (status === "connected") return account;
+    if (status === "connected") return addressText(account);
     return undefined;
   };
 

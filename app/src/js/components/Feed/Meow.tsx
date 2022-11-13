@@ -34,8 +34,17 @@ const MeowHeader = styled.div`
 `;
 
 const Username = styled.span`
+  color: #404040;
   font-size: 1.5em;
   font-weight: 500;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    :hover {
+      text-decoration: underline;
+    }
+  }
 `;
 
 const PublishedDate = styled.span`
@@ -89,19 +98,25 @@ const Meow = (props: Props) => {
     return result;
   };
 
+  const profileRoute = `/profile/${props.meow.profile.id}`;
+
   return (
     <Container>
       <AvatarColumn>
-        <Image
-          width={64}
-          roundedCircle
-          thumbnail
-          src={props.meow.profile.avatarURI}
-        />
+        <Link to={profileRoute}>
+          <Image
+            width={64}
+            roundedCircle
+            thumbnail
+            src={props.meow.profile.avatarURI}
+          />
+        </Link>
       </AvatarColumn>
       <ContentColumn>
         <MeowHeader>
-          <Username>{props.meow.profile.username}</Username>
+          <Username>
+            <Link to={profileRoute}>{props.meow.profile.username}</Link>
+          </Username>
           <PublishedDate>{props.meow.date.toLocaleString()}</PublishedDate>
         </MeowHeader>
         <MeowContent>{renderContent(props.meow.text)}</MeowContent>

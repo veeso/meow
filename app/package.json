@@ -13,6 +13,7 @@
     "start": "webpack serve --hot --mode development"
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.13",
     "autosize": "^5.0.1",
     "bootstrap": "^5.2.2",
     "jquery": "^3.6.1",

@@ -9,6 +9,8 @@ import BootstrapImage from "react-bootstrap/Image";
 import Spinner from "react-bootstrap/Spinner";
 
 import Chars from "./NewMeowForm/Chars";
+import { Link } from "react-router-dom";
+import { BigNumber } from "ethers";
 
 const MAX_MEOW_LENGTH = 256;
 
@@ -40,6 +42,7 @@ const ButtonContainer = styled.div`
 `;
 
 interface Props {
+  profileId: BigNumber;
   avatarURI?: string;
   onSubmit: (text: string) => Promise<void>;
 }
@@ -50,6 +53,7 @@ const NewMeowForm = (props: Props) => {
   const [publishing, setPublishing] = React.useState<boolean>(false);
   const disabled =
     meow.length == 0 || meow.length > MAX_MEOW_LENGTH || publishing;
+  const profileRoute = `/profile/${props.profileId}`;
 
   const onType = (event: React.FormEvent<EventTarget>) => {
     const text = (event.target as HTMLInputElement).value;
@@ -81,11 +85,13 @@ const NewMeowForm = (props: Props) => {
   return (
     <Container>
       <AvatarColumn>
-        <Image width={64} roundedCircle thumbnail src={props.avatarURI} />
+        <Link to={profileRoute}>
+          <Image width={64} roundedCircle thumbnail src={props.avatarURI} />
+        </Link>
       </AvatarColumn>
       <FormColumn>
         <Form>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Group controlId="new-meow-form">
             <Form.Control
               as="textarea"
               style={{ resize: "none", overflowY: "hidden" }}

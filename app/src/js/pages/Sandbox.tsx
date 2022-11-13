@@ -2,15 +2,20 @@ import { BigNumber } from "ethers";
 import * as React from "react";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components";
+
 import Feed from "../components/Feed";
-
+import MetamaskConnect from "../components/MetamaskConnect";
 import NewMeowForm from "../components/NewMeowForm";
+import Search from "../components/Search";
+import SearchResult from "../lib/model/search";
 
-const NewMeowFormContainer = styled.div`
-  width: 33%;
+const Main = styled.main`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
 `;
 
-const FeedContainer = styled.div`
+const Column = styled.div`
   width: 33%;
 `;
 
@@ -32,18 +37,48 @@ const Sandbox = () => {
     }));
   };
 
+  const delay = (t: number) => {
+    return new Promise((resolve) => setTimeout(resolve, t));
+  };
+
+  const onSearch = async (query: string): Promise<Array<SearchResult>> => {
+    return delay(1500).then(() => {
+      return [
+        {
+          text: query,
+          uri: "/profile/23",
+        },
+        {
+          text: "Stokatsu",
+          uri: "/profile/42",
+        },
+        {
+          text: "Pippo",
+          uri: "/profile/41",
+        },
+      ];
+    });
+  };
+
   return (
-    <main>
-      <NewMeowFormContainer>
-        <NewMeowForm
-          onSubmit={publishMeow}
-          avatarURI={"https://via.placeholder.com/64/"}
-        />
-      </NewMeowFormContainer>
-      <FeedContainer>
-        <Feed loadMeows={loadMeows} />
-      </FeedContainer>
-    </main>
+    <Main>
+      <Column>
+        <MetamaskConnect />
+        <div>
+          <NewMeowForm
+            onSubmit={publishMeow}
+            profileId={BigNumber.from(1)}
+            avatarURI={"https://via.placeholder.com/64/"}
+          />
+        </div>
+        <div>
+          <Feed loadMeows={loadMeows} />
+        </div>
+      </Column>
+      <Column>
+        <Search onSearch={onSearch} />
+      </Column>
+    </Main>
   );
 };
 
