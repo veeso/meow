@@ -11,6 +11,7 @@ import Spinner from "react-bootstrap/Spinner";
 import Chars from "./NewMeowForm/Chars";
 import { Link } from "react-router-dom";
 import { BigNumber } from "ethers";
+import { DEFAULT_AVATAR_URI } from "../lib/const";
 
 const MAX_MEOW_LENGTH = 256;
 
@@ -75,18 +76,20 @@ const NewMeowForm = (props: Props) => {
           setMeow("");
           setPublishing(false);
         })
-        .catch(() => {
-          setError("Failed to publish post");
+        .catch((e) => {
+          setError(`Failed to publish post: ${e.message}`);
           setPublishing(false);
         });
     }
   }, [publishing]);
 
+  const avatarURI = props.avatarURI ? props.avatarURI : DEFAULT_AVATAR_URI;
+
   return (
     <Container>
       <AvatarColumn>
         <Link to={profileRoute}>
-          <Image width={64} roundedCircle thumbnail src={props.avatarURI} />
+          <Image width={64} roundedCircle thumbnail src={avatarURI} />
         </Link>
       </AvatarColumn>
       <FormColumn>
@@ -112,7 +115,7 @@ const NewMeowForm = (props: Props) => {
                 hidden={!publishing}
                 animation="grow"
                 size="sm"
-                role="satus"
+                role="status"
                 aria-hidden="true"
               />
               Meow

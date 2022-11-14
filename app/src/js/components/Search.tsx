@@ -13,7 +13,8 @@ import Results from "./Search/Results";
 
 const Container = styled.div`
   border: 1px solid dodgerblue;
-  border-radius: 1em;
+  border-radius: 12px;
+  margin: 8px 0;
 
   input {
     border: 0;
@@ -28,9 +29,14 @@ const SearchIcon = styled.div`
   color: dodgerblue;
   display: inline-block;
   height: 100%;
-  line-height: 3em;
   margin: 0 8px;
   vertical-align: middle;
+`;
+
+const ResultsPopover = styled(Popover)`
+  margin-top: 1px;
+  max-width: 100%;
+  width: 100%;
 `;
 
 interface Props {
@@ -99,14 +105,17 @@ const Search = (props: Props) => {
           </Form.Group>
         </Form>
       </Container>
-      <Popover hidden={results === undefined && !error} placement="bottom">
+      <ResultsPopover
+        hidden={results === undefined && !error}
+        placement="bottom"
+      >
         <Popover.Header hidden={!error}>
           <Alert variant="danger">Unable to load search results</Alert>
         </Popover.Header>
-        <Popover.Body>
+        <Popover.Body style={{ padding: 0 }}>
           <Results entries={results} />
         </Popover.Body>
-      </Popover>
+      </ResultsPopover>
     </>
   );
 };

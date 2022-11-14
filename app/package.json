@@ -27,7 +27,9 @@
     "react-hot-loader": "^4.13.0",
     "react-infinite-scroll-component": "^6.1.0",
     "react-router-dom": "^6.4.3",
-    "styled-components": "^5.3.6"
+    "styled-components": "^5.3.6",
+    "typescript-cookie": "^1.0.4",
+    "web3": "^1.8.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.2",

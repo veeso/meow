@@ -6,8 +6,24 @@ import styled from "styled-components";
 import SearchResult from "../../lib/model/search";
 
 const Container = styled.div`
-  padding: 12px 0;
+  font-size: 1.5em;
+  padding: 12px 12px;
   width: 100%;
+
+  :hover {
+    background-color: #eee;
+  }
+`;
+
+const SearchLink = styled(Link)`
+  color: #404040;
+  display: block;
+  text-decoration: none;
+  width: 100%;
+  :hover {
+    color: dodgerblue;
+    text-decoration: underline;
+  }
 `;
 
 interface Props {
@@ -17,7 +33,7 @@ interface Props {
 const Results = (props: Props) => {
   const entries = props.entries?.map((entry, i) => (
     <Container key={i}>
-      <Link to={entry.uri}>{entry.text}</Link>
+      <SearchLink to={entry.uri}>{entry.text}</SearchLink>
     </Container>
   ));
 
