@@ -61,14 +61,15 @@ describe("MeowStorage", function () {
       1668175551
     );
     const meow = await meowStorage.getMeowById(BigNumber.from(1));
-    expect(meow.id.toNumber()).to.be.equal(1);
-    expect(meow.text).to.be.equal(
+    expect(meow.meow.id.toNumber()).to.be.equal(1);
+    expect(meow.profile.id.toNumber()).to.be.equal(1);
+    expect(meow.meow.text).to.be.equal(
       "Hello, world! I'm sending this from my #polygon wallet! #web3 #solidity #blockchain"
     );
-    expect(JSON.stringify(meow.hashtags)).to.be.equal(
+    expect(JSON.stringify(meow.meow.hashtags)).to.be.equal(
       JSON.stringify(["polygon", "web3", "solidity", "blockchain"])
     );
-    expect(meow.epoch).to.be.equal(1668175551);
+    expect(meow.meow.epoch).to.be.equal(1668175551);
   });
 
   it("Should emit event on post", async () => {
@@ -122,17 +123,17 @@ describe("MeowStorage", function () {
       BigNumber.from(2)
     );
     expect(meows.length).to.be.equal(2);
-    expect(meows[0].id.toNumber()).to.be.equal(5);
-    expect(meows[1].id.toNumber()).to.be.equal(4);
+    expect(meows[0].meow.id.toNumber()).to.be.equal(5);
+    expect(meows[1].meow.id.toNumber()).to.be.equal(4);
     meows = await meowStorage.getMeowsForProfile(
       BigNumber.from(1),
       BigNumber.from(2),
       BigNumber.from(3)
     );
     expect(meows.length).to.be.equal(3);
-    expect(meows[0].id.toNumber()).to.be.equal(3);
-    expect(meows[1].id.toNumber()).to.be.equal(2);
-    expect(meows[2].id.toNumber()).to.be.equal(1);
+    expect(meows[0].meow.id.toNumber()).to.be.equal(3);
+    expect(meows[1].meow.id.toNumber()).to.be.equal(2);
+    expect(meows[2].meow.id.toNumber()).to.be.equal(1);
   });
 
   it("should return meows by following", async () => {
@@ -151,8 +152,8 @@ describe("MeowStorage", function () {
 
     const meows = await meowStorage.getMeowsAggregatedByFollowing(1, 2);
     expect(meows.length).to.be.equal(2);
-    expect(meows[0].id.toNumber()).to.be.equal(4);
-    expect(meows[1].id.toNumber()).to.be.equal(3);
+    expect(meows[0].meow.id.toNumber()).to.be.equal(4);
+    expect(meows[1].meow.id.toNumber()).to.be.equal(3);
   });
 
   it("should return meows by hashtags", async () => {
@@ -170,7 +171,7 @@ describe("MeowStorage", function () {
       BigNumber.from(2)
     );
     expect(meows.length).to.be.equal(2);
-    expect(meows[0].id.toNumber()).to.be.equal(5);
-    expect(meows[1].id.toNumber()).to.be.equal(3);
+    expect(meows[0].meow.id.toNumber()).to.be.equal(5);
+    expect(meows[1].meow.id.toNumber()).to.be.equal(3);
   });
 });

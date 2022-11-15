@@ -23,6 +23,11 @@ contract MeowStorage is BaseStorage {
     }
     uint256 lastMeowId;
 
+    struct MeowOutput {
+        Meow meow;
+        UserStorage.Profile profile;
+    }
+
     // map between meow id and meow entity
     mapping(uint256 => Meow) meows;
 
@@ -59,8 +64,20 @@ contract MeowStorage is BaseStorage {
     /// @notice get meow by id
     /// @param _id meow id
     /// @return meow associated to the id
-    function getMeowById(uint256 _id) external view returns (Meow memory) {
-        return meows[_id];
+    function getMeowById(uint256 _id)
+        external
+        view
+        returns (MeowOutput memory)
+    {
+        // check if exists
+        require(meows[_id].id != 0);
+        // get manager
+        ContractManager _manager = ContractManager(managerAddr);
+        // retrieve address for user storage
+        address _userStorageAddr = _manager.getAddress("UserStorage");
+        UserStorage _userStorage = UserStorage(_userStorageAddr);
+        return
+            MeowOutput(meows[_id], _userStorage.getProfile(meowToProfile[_id]));
     }
 
     /// @notice get meows associated to author in provided range
@@ -73,9 +90,14 @@ contract MeowStorage is BaseStorage {
         uint256 _profileId,
         uint256 _offset,
         uint256 _count
-    ) external view returns (Meow[] memory) {
+    ) external view returns (MeowOutput[] memory) {
+        // get manager
+        ContractManager _manager = ContractManager(managerAddr);
+        // retrieve address for user storage
+        address _userStorageAddr = _manager.getAddress("UserStorage");
+        UserStorage _userStorage = UserStorage(_userStorageAddr);
         uint256 _resultIndex = 0;
-        Meow[] memory _result = new Meow[](_count);
+        MeowOutput[] memory _result = new MeowOutput[](_count);
         uint256 _cursor = lastMeowId - _offset;
         for (
             uint256 i = _cursor;
@@ -83,7 +105,10 @@ contract MeowStorage is BaseStorage {
             i--
         ) {
             if (meowToProfile[i] == _profileId) {
-                _result[_resultIndex] = meows[i];
+                _result[_resultIndex] = MeowOutput(
+                    meows[i],
+                    _userStorage.getProfile(meowToProfile[meows[i].id])
+                );
                 _resultIndex++;
             }
         }
@@ -97,7 +122,7 @@ contract MeowStorage is BaseStorage {
     function getMeowsAggregatedByFollowing(uint256 _offset, uint256 _count)
         external
         view
-        returns (Meow[] memory)
+        returns (MeowOutput[] memory)
     {
         // get manager
         ContractManager _manager = ContractManager(managerAddr);
@@ -110,7 +135,7 @@ contract MeowStorage is BaseStorage {
         uint256[] memory _following = _userStorage.getFollowing(_profileId);
         // iter over feed
         uint256 _resultIndex = 0;
-        Meow[] memory _result = new Meow[](_count);
+        MeowOutput[] memory _result = new MeowOutput[](_count);
         uint256 _cursor = lastMeowId - _offset;
         for (
             uint256 i = _cursor;
@@ -118,7 +143,10 @@ contract MeowStorage is BaseStorage {
             i--
         ) {
             if (meowPublishedByFollowedProfile(_following, meowToProfile[i])) {
-                _result[_resultIndex] = meows[i];
+                _result[_resultIndex] = MeowOutput(
+                    meows[i],
+                    _userStorage.getProfile(meowToProfile[meows[i].id])
+                );
                 _resultIndex++;
             }
         }
@@ -135,9 +163,14 @@ contract MeowStorage is BaseStorage {
         string memory _hashtag,
         uint256 _offset,
         uint256 _count
-    ) external view returns (Meow[] memory) {
+    ) external view returns (MeowOutput[] memory) {
+        // get manager
+        ContractManager _manager = ContractManager(managerAddr);
+        // retrieve address for user storage
+        address _userStorageAddr = _manager.getAddress("UserStorage");
+        UserStorage _userStorage = UserStorage(_userStorageAddr);
         uint256 _resultIndex = 0;
-        Meow[] memory _result = new Meow[](_count);
+        MeowOutput[] memory _result = new MeowOutput[](_count);
         uint256 _cursor = lastMeowId - _offset;
         for (
             uint256 i = _cursor;
@@ -145,7 +178,10 @@ contract MeowStorage is BaseStorage {
             i--
         ) {
             if (hashtagsContains(meows[i].hashtags, _hashtag)) {
-                _result[_resultIndex] = meows[i];
+                _result[_resultIndex] = MeowOutput(
+                    meows[i],
+                    _userStorage.getProfile(meowToProfile[meows[i].id])
+                );
                 _resultIndex++;
             }
         }
