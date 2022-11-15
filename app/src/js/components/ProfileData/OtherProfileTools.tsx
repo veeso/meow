@@ -23,7 +23,7 @@ const OtherProfileTools = (props: Props) => {
   React.useEffect(() => {
     const middleware = new UserStorage(new Web3Client(account, ethereum));
     middleware.getFollowers(props.id).then((followers) => {
-      if (followers.includes(props.userId)) {
+      if (followers.some((id) => id.eq(props.userId))) {
         setFollowing(true);
       }
     });
