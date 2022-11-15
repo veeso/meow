@@ -4,7 +4,6 @@ import debounce from "lodash.debounce";
 import styled from "styled-components";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
-import Popover from "react-bootstrap/Popover";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 
 import SearchResult from "../lib/model/search";
@@ -15,6 +14,7 @@ const Container = styled.div`
   border: 1px solid dodgerblue;
   border-radius: 12px;
   margin: 8px 0;
+  position: relative;
 
   input {
     border: 0;
@@ -33,10 +33,14 @@ const SearchIcon = styled.div`
   vertical-align: middle;
 `;
 
-const ResultsPopover = styled(Popover)`
-  margin-top: 1px;
-  max-width: 100%;
+const ResultsContainer = styled.div`
+  background-color: white;
+  border: 1px solid #ccc;
+  bot: 0;
+  margin-top: 8px;
+  position: absolute;
   width: 100%;
+  z-index: 100;
 `;
 
 interface Props {
@@ -67,6 +71,9 @@ const Search = (props: Props) => {
         .catch(() => {
           setError(true);
         });
+    } else {
+      setError(false);
+      setResults(undefined);
     }
   }, [query]);
 
@@ -104,18 +111,13 @@ const Search = (props: Props) => {
             </Row>
           </Form.Group>
         </Form>
-      </Container>
-      <ResultsPopover
-        hidden={results === undefined && !error}
-        placement="bottom"
-      >
-        <Popover.Header hidden={!error}>
-          <Alert variant="danger">Unable to load search results</Alert>
-        </Popover.Header>
-        <Popover.Body style={{ padding: 0 }}>
+        <ResultsContainer hidden={results === undefined && !error}>
+          <Alert hidden={!error} variant="danger">
+            Unable to load search results
+          </Alert>
           <Results entries={results} />
-        </Popover.Body>
-      </ResultsPopover>
+        </ResultsContainer>
+      </Container>
     </>
   );
 };

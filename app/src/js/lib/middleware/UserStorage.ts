@@ -5,7 +5,10 @@ import Web3Client from "../web3/client";
 import web3 from "web3";
 import { Profile as ProfileEth } from "../web3/contracts/UserStorage";
 import { DEFAULT_AVATAR_URI } from "../const";
+import Results from "../../components/Search/Results";
+import { profile } from "console";
 
+const ZERO = BigNumber.from(0);
 export default class UserStorage {
   private client: Web3Client;
 
@@ -55,9 +58,25 @@ export default class UserStorage {
     return this.client.setAvatar(avatarURI);
   }
 
+  async searchUser(query: string, maxResults: number): Promise<Array<Profile>> {
+    const lastUserId = BigNumber.from(await this.client.getLastProfileId());
+    const results = new Array();
+    for (
+      let i = ZERO.add(1);
+      i <= lastUserId && results.length < maxResults;
+      i = i.add(1)
+    ) {
+      const profile = this.adaptProfile(await this.client.getProfile(i));
+      if (profile.username.includes(query)) {
+        results.push(profile);
+      }
+    }
+    return results;
+  }
+
   private adaptProfile(profile: ProfileEth): Profile {
     return {
-      id: profile.id,
+      id: BigNumber.from(profile.id),
       username: web3.utils.hexToUtf8(profile.username),
       biography: profile.biography,
       avatarURI:

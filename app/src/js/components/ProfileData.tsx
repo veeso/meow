@@ -18,13 +18,20 @@ import Following from "./ProfileData/Following";
 import UserStorage from "../lib/middleware/UserStorage";
 
 const Image = styled(BootstrapImage)`
-  height: 128px;
+  height: 96px;
   margin-right: 8px;
 `;
 
 const Username = styled.p`
   font-size: 2em;
   font-weight: 200;
+`;
+
+const Biography = styled.p`
+  color: #444;
+  font-size: 1.2em;
+  font-weight: 200;
+  padding: 24px 24px 0 24px;
 `;
 
 interface Props {
@@ -47,30 +54,34 @@ const ProfileData = (props: Props) => {
     setFollowersVisible(false);
     setFollowingVisible(false);
     middleware.getFollowers(props.profile.id).then((profiles) => {
-      setFollowers([...followers, ...profiles]);
+      setFollowers(profiles);
     });
     middleware.getFollowing(props.profile.id).then((profiles) => {
-      setFollowing([...following, ...profiles]);
+      setFollowing(profiles);
     });
   }, [props.profile]);
 
-  const tools =
-    props.profile.id === props.userProfileId ? (
-      <UserProfileTools />
-    ) : (
-      <OtherProfileTools userId={props.userProfileId} id={props.profile.id} />
-    );
+  const tools = props.profile.id.eq(props.userProfileId) ? (
+    <UserProfileTools />
+  ) : (
+    <OtherProfileTools userId={props.userProfileId} id={props.profile.id} />
+  );
   return (
     <Container fluid>
       <Row>
-        <Col lg={3}>
+        <Col lg={2}>
           <Image roundedCircle src={props.profile.avatarURI} />
         </Col>
-        <Col lg={3}>
+        <Col lg={2}>
           <Username>{props.profile.username}</Username>
         </Col>
-        <Col style={{ justifyContent: "end" }} lg={6}>
+        <Col style={{ justifyContent: "end" }} lg={8}>
           {tools}
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Biography>{props.profile.biography}</Biography>
         </Col>
       </Row>
       <Row>

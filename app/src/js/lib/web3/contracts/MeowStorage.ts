@@ -174,7 +174,7 @@ export const ABI = [
 ];
 
 export const MEOW_STORAGE_ADDRESS =
-  "0xdD1a0F32f262020A1e45FE46E68fb92475F7F058";
+  "0xA5e283DCf80Ad8D067dC34084f4C07CC127DC7d7";
 
 // types
 
@@ -185,7 +185,7 @@ export interface MeowWithProfile {
 
 export interface Meow {
   epoch: string;
-  id: BigNumber;
+  id: string;
   hashtags: Array<string>;
   text: string;
 }

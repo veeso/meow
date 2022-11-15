@@ -60,6 +60,22 @@ describe("UserStorage", function () {
     await expect(userStorage.getUserProfile()).to.be.rejectedWith(Error);
   });
 
+  it("should return error for duped profile", async () => {
+    const { userStorage } = await deployContract();
+    await userStorage.createProfile("veeso_dev");
+    await expect(userStorage.createProfile("veeso_dev")).to.be.rejectedWith(
+      Error
+    );
+  });
+
+  it("should return last user id", async () => {
+    const { userStorage } = await deployContract();
+    // create test user
+    await userStorage.createProfile("veeso_dev");
+    const profile = await userStorage.getLastProfileId();
+    expect(profile.toNumber()).to.be.equal(1);
+  });
+
   it("should follow profile", async () => {
     const { userStorage, otherAccount } = await deployContract();
     // create test user

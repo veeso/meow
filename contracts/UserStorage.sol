@@ -31,6 +31,7 @@ contract UserStorage is BaseStorage {
     /// @notice Create user with provided username
     /// @param _username username
     function createProfile(string memory _username) external {
+        require(profiles[tx.origin].id == 0);
         require(bytes(_username).length <= 32);
         bytes32 _busername;
         assembly {
@@ -39,6 +40,12 @@ contract UserStorage is BaseStorage {
         lastProfileId++;
         profiles[tx.origin] = Profile(lastProfileId, _busername, "", "");
         profilesOwners[lastProfileId] = tx.origin;
+    }
+
+    /// @notice returns the last profile id available
+    /// @return id last profile id
+    function getLastProfileId() external view returns (uint256) {
+        return lastProfileId;
     }
 
     /// @notice get profile by profile id

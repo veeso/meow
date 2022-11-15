@@ -39,12 +39,11 @@ export default class MeowStorage {
     for (
       let i = arrayCursor;
       i >= arrayCursor.sub(count) && resultIndex < count && i > ZERO;
-      i = i.sub(i)
+      i = i.sub(1)
     ) {
-      const meow = await this.client.getMeowById(i);
-      console.log("FOUND MEOW", meow);
-      if (meow.profile.id === profile.id) {
-        result.push(this.adaptMeowWithProfile(meow));
+      const meow = this.adaptMeowWithProfile(await this.client.getMeowById(i));
+      if (meow.profile.id.eq(profile.id)) {
+        result.push(meow);
         resultIndex = resultIndex.add(1);
       }
     }
@@ -66,11 +65,13 @@ export default class MeowStorage {
     for (
       let i = cursor;
       i >= cursor.sub(count) && resultIndex < count && i > ZERO;
-      i = i.sub(i)
+      i = i.sub(1)
     ) {
-      const meow = await this.client.getMeowById(i);
-      if (following.includes(meow.profile.id)) {
-        result.push(this.adaptMeowWithProfile(meow));
+      const meow = this.adaptMeowWithProfile(await this.client.getMeowById(i));
+      let includes = following.some((val) => val.eq(meow.profile.id));
+      console.log("figs", following, meow.profile.id, includes);
+      if (includes) {
+        result.push(meow);
         resultIndex = resultIndex.add(1);
       }
     }
@@ -89,9 +90,10 @@ export default class MeowStorage {
     for (
       let i = cursor;
       i >= cursor.sub(count) && resultIndex < count && i > ZERO;
-      i = i.sub(i)
+      i = i.sub(1)
     ) {
       const meow = await this.client.getMeowById(i);
+      console.log(meow.meow.hashtags);
       if (meow.meow.hashtags.includes(hashtag)) {
         result.push(this.adaptMeowWithProfile(meow));
         resultIndex = resultIndex.add(1);
@@ -102,10 +104,10 @@ export default class MeowStorage {
 
   private adaptMeowWithProfile(meow: MeowWithProfile): Meow {
     return {
-      id: meow.meow.id,
+      id: BigNumber.from(meow.meow.id),
       text: meow.meow.text,
       profile: {
-        id: meow.profile.id,
+        id: BigNumber.from(meow.profile.id),
         username: web3.utils.hexToUtf8(meow.profile.username),
         biography: meow.profile.biography,
         avatarURI:

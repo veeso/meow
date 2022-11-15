@@ -81,7 +81,7 @@ const Meow = (props: Props) => {
       .split(regex)
       .map((value, i) => <span key={i}>{value}</span>);
     const matches = text.match(regex)?.map((value, i) => (
-      <Hashtag key={i} to={`/tag/${value.substring(1)}`}>
+      <Hashtag key={i + output.length} to={`/tag/${value.substring(1)}`}>
         {value}
       </Hashtag>
     ));

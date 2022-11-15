@@ -31,6 +31,11 @@ export default class Web3Client {
       .send({ from: this.address });
   }
 
+  async getLastProfileId(): Promise<string> {
+    const contract = this.userStorageContract();
+    return contract.methods.getLastProfileId().call({ from: this.address });
+  }
+
   async getUserProfile(): Promise<Profile> {
     const contract = this.userStorageContract();
     return contract.methods.getUserProfile().call({ from: this.address });

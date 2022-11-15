@@ -3,13 +3,11 @@ import { hot } from "react-hot-loader/root";
 import styled from "styled-components";
 import { useConnectedMetaMask } from "metamask-react";
 import { BigNumber } from "ethers";
-import web3 from "web3";
 import { useParams } from "react-router-dom";
 
 import Feed from "../components/Feed";
 import Meow from "../lib/model/meow";
 import Web3Client from "../lib/web3/client";
-import { Meow as MeowEth } from "../lib/web3/contracts/MeowStorage";
 import ProfileEntity from "../lib/model/profile";
 import ProfileData from "../components/ProfileData";
 import UserStorage from "../lib/middleware/UserStorage";
@@ -41,7 +39,6 @@ const Profile = (props: Props) => {
   const { account, ethereum } = useConnectedMetaMask();
   const [profile, setProfile] = React.useState<ProfileEntity>();
   const params = useParams();
-  console.log("PARAMS", params);
 
   const getProfile = async () => {
     const profileId = BigNumber.from(params.profileId);

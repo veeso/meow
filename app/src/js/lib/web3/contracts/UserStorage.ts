@@ -104,6 +104,19 @@ export const ABI = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "getLastProfileId",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "uint256",
@@ -279,10 +292,10 @@ export const ABI = [
 ];
 
 export const USER_STORAGE_ADDRESS =
-  "0x88b07CadA7AaaF3d91313F09826ef941Fd282151";
+  "0x366f8aE6b2ADDce26440C4E5Fd7AE4c3555DED14";
 
 export interface Profile {
-  id: BigNumber;
+  id: string;
   username: string;
   biography: string;
   avatarURI: string;

@@ -11,6 +11,7 @@ import ProfileEntity from "./js/lib/model/profile";
 import Home from "./js/pages/Home";
 import Profile from "./js/pages/Profile";
 import UserStorage from "./js/lib/middleware/UserStorage";
+import Tag from "./js/pages/Tag";
 
 const App = () => {
   const { account, status, ethereum } = useMetaMask();
@@ -60,7 +61,28 @@ const App = () => {
   // resolvers
 
   const onSearch = async (query: string) => {
-    throw new Error("TODO: impl");
+    let results = new Array();
+    // push hashtag
+    if (query.startsWith("#") && query.length > 1) {
+      results.push({
+        text: `${query.trim()}`,
+        uri: `/tag/${query.substring(1)}`,
+      });
+    }
+    // search user
+    if (account && ethereum) {
+      const middleware = new UserStorage(new Web3Client(account, ethereum));
+      const users = await (
+        await middleware.searchUser(query, 8)
+      ).map((profile) => ({
+        image: profile.avatarURI,
+        text: profile.username,
+        uri: `/profile/${profile.id.toString()}`,
+      }));
+      results = [...results, ...users];
+    }
+
+    return results;
   };
 
   const onSignedIn = () => {
@@ -81,7 +103,7 @@ const App = () => {
             path="/profile/:profileId"
             element={profile ? <Profile userProfile={profile} /> : <></>}
           />
-          <Route path="/search/:search" element={<></>} />
+          <Route path="/tag/:tag" element={<Tag />} />
         </Routes>
       </main>
     </>
