@@ -2,6 +2,7 @@ import * as React from "react";
 import { Alert } from "react-bootstrap";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components";
+import { BigNumber } from "ethers";
 
 import Meow from "../lib/model/meow";
 import List from "./Feed/List";
@@ -14,8 +15,10 @@ const Container = styled.div`
   padding: 0 32px;
 `;
 
+const MEOWS_TO_LOAD_COUNT = 32;
+
 interface Props {
-  loadMeows: (offset: number, count: number) => Promise<Array<Meow>>;
+  loadMeows: (offset: BigNumber, count: BigNumber) => Promise<Array<Meow>>;
 }
 
 const Feed = (props: Props) => {
@@ -34,21 +37,32 @@ const Feed = (props: Props) => {
     if (error) {
       return <Alert variant="danger">Failed to load meows</Alert>;
     }
-    return <List meows={meows} loadMoreMeows={loadMoreMeows} />;
+    return (
+      <List
+        meows={meows}
+        loadMoreMeows={loadMoreMeows}
+        loadPerFetch={MEOWS_TO_LOAD_COUNT}
+      />
+    );
   };
 
   React.useEffect(() => loadMoreMeows(), []);
   React.useEffect(() => {
     if (loading) {
       props
-        .loadMeows(meows.length, 32)
+        .loadMeows(
+          BigNumber.from(meows.length),
+          BigNumber.from(MEOWS_TO_LOAD_COUNT)
+        )
         .then((newMeows) => {
           setMeows([...newMeows, ...meows]);
           setError(false);
           setLoading(false);
         })
-        .catch(() => {
+        .catch((e) => {
+          console.error("error", e);
           setError(true);
+          setLoading(false);
         });
     }
   }, [loading]);

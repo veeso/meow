@@ -5,6 +5,7 @@ import { useMetaMask } from "metamask-react";
 
 import SignUpForm from "../components/SignUpForm";
 import Web3Client from "../lib/web3/client";
+import UserStorage from "../lib/middleware/UserStorage";
 
 const Container = styled.div`
   display: flex;
@@ -29,8 +30,8 @@ const Login = (props: Props) => {
     if (!account || !ethereum) {
       throw new Error("Please, connect your wallet via Metamask first");
     }
-    const client = new Web3Client(account, ethereum);
-    return await client.createProfile(username).then(() => {
+    const middleware = new UserStorage(new Web3Client(account, ethereum));
+    return await middleware.createProfile(username).then(() => {
       props.onSignedIn();
     });
   };

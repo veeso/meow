@@ -18,6 +18,7 @@ const SpinnerContainer = styled.div`
 interface Props {
   loadMoreMeows: () => void;
   meows: Array<MeowModel>;
+  loadPerFetch: number;
 }
 
 const List = (props: Props) => {
@@ -35,11 +36,14 @@ const List = (props: Props) => {
     return range;
   };
 
+  const hasMore =
+    props.meows.length % props.loadPerFetch === 0 && props.meows.length > 0;
+
   return (
     <Container>
       <InfiniteScroll
         dataLength={props.meows.length}
-        hasMore={true}
+        hasMore={hasMore}
         next={props.loadMoreMeows}
         loader={
           <SpinnerContainer>

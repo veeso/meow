@@ -1,3 +1,5 @@
+import { BigNumber } from "ethers";
+
 export const ABI = [
   {
     inputs: [
@@ -125,6 +127,11 @@ export const ABI = [
           },
           {
             internalType: "string",
+            name: "biography",
+            type: "string",
+          },
+          {
+            internalType: "string",
             name: "avatarURI",
             type: "string",
           },
@@ -152,6 +159,11 @@ export const ABI = [
             internalType: "bytes32",
             name: "username",
             type: "bytes32",
+          },
+          {
+            internalType: "string",
+            name: "biography",
+            type: "string",
           },
           {
             internalType: "string",
@@ -215,6 +227,19 @@ export const ABI = [
   {
     inputs: [
       {
+        internalType: "string",
+        name: "_bio",
+        type: "string",
+      },
+    ],
+    name: "setBiography",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "_managerAddr",
         type: "address",
@@ -254,4 +279,11 @@ export const ABI = [
 ];
 
 export const USER_STORAGE_ADDRESS =
-  "0x7d6655eE29E15d6E508C515a7aE7Cd670D08c25B";
+  "0x88b07CadA7AaaF3d91313F09826ef941Fd282151";
+
+export interface Profile {
+  id: BigNumber;
+  username: string;
+  biography: string;
+  avatarURI: string;
+}

@@ -1,3 +1,6 @@
+import { BigNumber } from "ethers";
+import { Profile } from "./UserStorage";
+
 export const ABI = [
   {
     anonymous: false,
@@ -19,6 +22,19 @@ export const ABI = [
     type: "event",
   },
   {
+    inputs: [],
+    name: "getLastMeowId",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "uint256",
@@ -31,131 +47,63 @@ export const ABI = [
       {
         components: [
           {
-            internalType: "uint256",
-            name: "id",
-            type: "uint256",
+            components: [
+              {
+                internalType: "uint256",
+                name: "id",
+                type: "uint256",
+              },
+              {
+                internalType: "string",
+                name: "text",
+                type: "string",
+              },
+              {
+                internalType: "string[]",
+                name: "hashtags",
+                type: "string[]",
+              },
+              {
+                internalType: "uint128",
+                name: "epoch",
+                type: "uint128",
+              },
+            ],
+            internalType: "struct MeowStorage.Meow",
+            name: "meow",
+            type: "tuple",
           },
           {
-            internalType: "string",
-            name: "text",
-            type: "string",
-          },
-          {
-            internalType: "string[]",
-            name: "hashtags",
-            type: "string[]",
-          },
-          {
-            internalType: "uint128",
-            name: "epoch",
-            type: "uint128",
+            components: [
+              {
+                internalType: "uint256",
+                name: "id",
+                type: "uint256",
+              },
+              {
+                internalType: "bytes32",
+                name: "username",
+                type: "bytes32",
+              },
+              {
+                internalType: "string",
+                name: "biography",
+                type: "string",
+              },
+              {
+                internalType: "string",
+                name: "avatarURI",
+                type: "string",
+              },
+            ],
+            internalType: "struct UserStorage.Profile",
+            name: "profile",
+            type: "tuple",
           },
         ],
-        internalType: "struct MeowStorage.Meow",
+        internalType: "struct MeowStorage.MeowWithProfile",
         name: "",
         type: "tuple",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "_hashtag",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "_offset",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_count",
-        type: "uint256",
-      },
-    ],
-    name: "getMeowsByHashtag",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "id",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "text",
-            type: "string",
-          },
-          {
-            internalType: "string[]",
-            name: "hashtags",
-            type: "string[]",
-          },
-          {
-            internalType: "uint128",
-            name: "epoch",
-            type: "uint128",
-          },
-        ],
-        internalType: "struct MeowStorage.Meow[]",
-        name: "",
-        type: "tuple[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_profileId",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_offset",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_count",
-        type: "uint256",
-      },
-    ],
-    name: "getMeowsForProfile",
-    outputs: [
-      {
-        components: [
-          {
-            internalType: "uint256",
-            name: "id",
-            type: "uint256",
-          },
-          {
-            internalType: "string",
-            name: "text",
-            type: "string",
-          },
-          {
-            internalType: "string[]",
-            name: "hashtags",
-            type: "string[]",
-          },
-          {
-            internalType: "uint128",
-            name: "epoch",
-            type: "uint128",
-          },
-        ],
-        internalType: "struct MeowStorage.Meow[]",
-        name: "",
-        type: "tuple[]",
       },
     ],
     stateMutability: "view",
@@ -226,4 +174,18 @@ export const ABI = [
 ];
 
 export const MEOW_STORAGE_ADDRESS =
-  "0x30eBEE43A1f7Ba89C78Eb4Adde3ada425DAA473d";
+  "0xdD1a0F32f262020A1e45FE46E68fb92475F7F058";
+
+// types
+
+export interface MeowWithProfile {
+  meow: Meow;
+  profile: Profile;
+}
+
+export interface Meow {
+  epoch: string;
+  id: BigNumber;
+  hashtags: Array<string>;
+  text: string;
+}

@@ -2,6 +2,8 @@
 
 - [Meow](#meow)
   - [Setup](#setup)
+    - [Run tests](#run-tests)
+    - [Deploy](#deploy)
   - [Support the developer ☕](#support-the-developer-)
 
 ---
@@ -13,19 +15,23 @@
 
 ## Setup
 
-Try running some of the following tasks:
+### Run tests
 
-```shell
-npx hardhat help
-npx hardat compile
-npx hardhat test
+```sh
+npx hardhat compile
 REPORT_GAS=true npx hardhat test
-npx hardhat node
+```
+
+### Deploy
+
+```sh
 # deploy
 npx hardhat run scripts/deploy.ts
 # deploy test net
 npx hardhat run scripts/deploy.ts --network mumbai
 ```
+
+---
 
 ## Support the developer ☕
 

@@ -109,69 +109,17 @@ describe("MeowStorage", function () {
     ).to.be.rejectedWith(Error);
   });
 
-  it("should return meows by profile", async () => {
+  it("should return last meow id", async () => {
     const { meowStorage, userStorage } = await deployContract();
+    // create test user
     await userStorage.createProfile("veeso_dev");
-    await meowStorage.publish("1", [], 1668175551);
-    await meowStorage.publish("2", [], 1668175551);
-    await meowStorage.publish("3", [], 1668175551);
-    await meowStorage.publish("4", [], 1668175551);
-    await meowStorage.publish("5", [], 1668175551);
-    let meows = await meowStorage.getMeowsForProfile(
-      BigNumber.from(1),
-      BigNumber.from(0),
-      BigNumber.from(2)
-    );
-    expect(meows.length).to.be.equal(2);
-    expect(meows[0].meow.id.toNumber()).to.be.equal(5);
-    expect(meows[1].meow.id.toNumber()).to.be.equal(4);
-    meows = await meowStorage.getMeowsForProfile(
-      BigNumber.from(1),
-      BigNumber.from(2),
-      BigNumber.from(3)
-    );
-    expect(meows.length).to.be.equal(3);
-    expect(meows[0].meow.id.toNumber()).to.be.equal(3);
-    expect(meows[1].meow.id.toNumber()).to.be.equal(2);
-    expect(meows[2].meow.id.toNumber()).to.be.equal(1);
-  });
 
-  it("should return meows by following", async () => {
-    const { meowStorage, userStorage, otherAccount } = await deployContract();
-    const [_, thirdAccount] = await ethers.getSigners();
-    await userStorage.createProfile("veeso_dev");
-    await userStorage.connect(otherAccount).createProfile("shibetoshi");
-    await userStorage.connect(thirdAccount).createProfile("omar");
-    await meowStorage.publish("1", ["web3", "ethereum"], 1668175551);
-    await userStorage.follow(2);
-    await userStorage.follow(3);
-    await meowStorage.connect(otherAccount).publish("2", [], 1668175551);
-    await meowStorage.connect(thirdAccount).publish("3", [], 1668175551);
-    await meowStorage.connect(otherAccount).publish("4", [], 1668175551);
-    await meowStorage.connect(otherAccount).publish("5", [], 1668175551);
-
-    const meows = await meowStorage.getMeowsAggregatedByFollowing(1, 2);
-    expect(meows.length).to.be.equal(2);
-    expect(meows[0].meow.id.toNumber()).to.be.equal(4);
-    expect(meows[1].meow.id.toNumber()).to.be.equal(3);
-  });
-
-  it("should return meows by hashtags", async () => {
-    const { meowStorage, userStorage } = await deployContract();
-    await userStorage.createProfile("veeso_dev");
-    await meowStorage.publish("1", ["web3", "ethereum"], 1668175551);
-    await meowStorage.publish("2", ["javascript", "typescript"], 1668175551);
-    await meowStorage.publish("3", ["citiesskylines", "web3"], 1668175551);
-    await meowStorage.publish("4", ["bitcoin", "btc"], 1668175551);
-    await meowStorage.publish("5", ["web3", "matic"], 1668175551);
-    await meowStorage.publish("6", ["web3", "solana"], 1668175551);
-    const meows = await meowStorage.getMeowsByHashtag(
-      "web3",
-      BigNumber.from(1),
-      BigNumber.from(2)
+    await meowStorage.publish(
+      "Hello, world! I'm sending this from my #polygon wallet! #web3 #solidity #blockchain",
+      ["polygon", "web3", "solidity", "blockchain"],
+      1668175551
     );
-    expect(meows.length).to.be.equal(2);
-    expect(meows[0].meow.id.toNumber()).to.be.equal(5);
-    expect(meows[1].meow.id.toNumber()).to.be.equal(3);
+    const lastId = await meowStorage.getLastMeowId();
+    expect(lastId.toNumber()).to.be.equal(1);
   });
 });

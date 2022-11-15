@@ -2,6 +2,7 @@ import * as React from "react";
 import { hot } from "react-hot-loader/root";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import ListGroup from "react-bootstrap/ListGroup";
 
 import SearchResult from "../../lib/model/search";
 
@@ -32,12 +33,12 @@ interface Props {
 
 const Results = (props: Props) => {
   const entries = props.entries?.map((entry, i) => (
-    <Container key={i}>
+    <ListGroup.Item key={i}>
       <SearchLink to={entry.uri}>{entry.text}</SearchLink>
-    </Container>
+    </ListGroup.Item>
   ));
 
-  return <>{entries}</>;
+  return <ListGroup>{entries}</ListGroup>;
 };
 
 export default hot(Results);

@@ -6,8 +6,9 @@ import Logo from "./Topbar/Logo";
 import MetamaskConnect from "./MetamaskConnect";
 import Search from "./Search";
 import Profile from "../lib/model/profile";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Avatar from "./Topbar/Avatar";
+import { DEFAULT_AVATAR_URI } from "../lib/const";
 
 const Header = styled.header`
   align-items: center;
@@ -24,6 +25,10 @@ const Header = styled.header`
 const LogoSection = styled.div`
   padding: 0 24px;
   text-align: left;
+
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 const Title = styled.h1`
@@ -74,9 +79,14 @@ interface Props {
 }
 
 const Topbar = (props: Props) => {
+  const navigate = useNavigate();
+  const avatarURI = props.profile
+    ? props.profile.avatarURI
+    : DEFAULT_AVATAR_URI;
+
   return (
     <Header>
-      <LogoSection>
+      <LogoSection onClick={() => navigate("/")}>
         <Logo />
         <Title>Meow</Title>
       </LogoSection>
@@ -88,7 +98,7 @@ const Topbar = (props: Props) => {
         <MetamaskConnect />
       </WalletSection>
       <Profile hidden={props.profile === undefined}>
-        <Avatar uri={props.profile?.avatarURI} />
+        <Avatar uri={avatarURI} />
         <ProfileLink to={`/profile/${props.profile?.id}`}>
           {props.profile?.username}
         </ProfileLink>

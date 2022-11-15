@@ -14,6 +14,7 @@ contract UserStorage is BaseStorage {
     struct Profile {
         uint256 id;
         bytes32 username;
+        string biography;
         string avatarURI;
     }
 
@@ -36,7 +37,7 @@ contract UserStorage is BaseStorage {
             _busername := mload(add(_username, 32))
         }
         lastProfileId++;
-        profiles[tx.origin] = Profile(lastProfileId, _busername, "");
+        profiles[tx.origin] = Profile(lastProfileId, _busername, "", "");
         profilesOwners[lastProfileId] = tx.origin;
     }
 
@@ -126,6 +127,13 @@ contract UserStorage is BaseStorage {
     {
         require(profilesOwners[_profileId] != address(0));
         return following[_profileId];
+    }
+
+    /// @notice set bio for profile
+    /// @param _bio profile biography
+    function setBiography(string memory _bio) external {
+        require(profileExists(tx.origin));
+        profiles[tx.origin].biography = _bio;
     }
 
     /// @notice set avatar for wallet

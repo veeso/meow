@@ -7,20 +7,21 @@ import web3 from "web3";
 import Login from "./js/pages/Login";
 import Topbar from "./js/components/Topbar";
 import Web3Client from "./js/lib/web3/client";
-import Profile from "./js/lib/model/profile";
+import ProfileEntity from "./js/lib/model/profile";
 import Home from "./js/pages/Home";
+import Profile from "./js/pages/Profile";
+import UserStorage from "./js/lib/middleware/UserStorage";
 
 const App = () => {
   const { account, status, ethereum } = useMetaMask();
   const navigate = useNavigate();
   // states
-  const [profile, setProfile] = React.useState<Profile>();
+  const [profile, setProfile] = React.useState<ProfileEntity>();
 
   const getSignedInUser = async () => {
-    console.log("vaffanculo", account, ethereum);
     if (account && ethereum) {
-      const client = new Web3Client(account, ethereum);
-      return await client.getUserProfile();
+      const middleware = new UserStorage(new Web3Client(account, ethereum));
+      return await middleware.getUserProfile();
     }
     return undefined;
   };
@@ -28,12 +29,11 @@ const App = () => {
   const authUser = () => {
     getSignedInUser()
       .then((profile) => {
-        setProfile({
-          id: profile.id,
-          username: web3.utils.hexToUtf8(profile.username),
-          avatarURI:
-            profile.avatarURI.length === 0 ? undefined : profile.avatarURI,
-        });
+        if (profile) {
+          setProfile(profile);
+        } else {
+          setProfile(undefined);
+        }
       })
       .catch(() => {
         setProfile(undefined);
@@ -77,7 +77,11 @@ const App = () => {
             element={profile ? <Home profile={profile} /> : <></>}
           />
           <Route path="/login" element={<Login onSignedIn={onSignedIn} />} />
-          <Route path="/profile/:profileId" element={<></>} />
+          <Route
+            path="/profile/:profileId"
+            element={profile ? <Profile userProfile={profile} /> : <></>}
+          />
+          <Route path="/search/:search" element={<></>} />
         </Routes>
       </main>
     </>

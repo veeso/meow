@@ -11,7 +11,6 @@ import Spinner from "react-bootstrap/Spinner";
 import Chars from "./NewMeowForm/Chars";
 import { Link } from "react-router-dom";
 import { BigNumber } from "ethers";
-import { DEFAULT_AVATAR_URI } from "../lib/const";
 
 const MAX_MEOW_LENGTH = 256;
 
@@ -44,7 +43,7 @@ const ButtonContainer = styled.div`
 
 interface Props {
   profileId: BigNumber;
-  avatarURI?: string;
+  avatarURI: string;
   onSubmit: (text: string) => Promise<void>;
 }
 
@@ -83,13 +82,11 @@ const NewMeowForm = (props: Props) => {
     }
   }, [publishing]);
 
-  const avatarURI = props.avatarURI ? props.avatarURI : DEFAULT_AVATAR_URI;
-
   return (
     <Container>
       <AvatarColumn>
         <Link to={profileRoute}>
-          <Image width={64} roundedCircle thumbnail src={avatarURI} />
+          <Image width={64} roundedCircle thumbnail src={props.avatarURI} />
         </Link>
       </AvatarColumn>
       <FormColumn>

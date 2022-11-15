@@ -4,8 +4,9 @@ import Button from "react-bootstrap/Button";
 import { useMetaMask } from "metamask-react";
 import Logo from "./MetamaskConnect/Logo";
 
-//const POLYGON_NETWORK = "0x89"; // 137
-const POLYGON_NETWORK = "0x13881"; // 80001 (mumbai)
+//const CHAIN_ID = "0x89"; // Polygon
+const CHAIN_ID = "0x13881"; // 80001 (mumbai)
+//const CHAIN_ID = "0x5"; // goerly
 
 const MetamaskConnect = () => {
   const { status, connect, account, chainId, switchChain } = useMetaMask();
@@ -14,8 +15,8 @@ const MetamaskConnect = () => {
 
   const onClick = () => {
     if (status === "notConnected") {
-      if (chainId !== POLYGON_NETWORK) {
-        switchChain(POLYGON_NETWORK);
+      if (chainId !== CHAIN_ID) {
+        switchChain(CHAIN_ID);
       }
       return connect();
     }

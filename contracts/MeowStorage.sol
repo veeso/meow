@@ -21,9 +21,10 @@ contract MeowStorage is BaseStorage {
         string[] hashtags;
         uint128 epoch;
     }
+
     uint256 lastMeowId;
 
-    struct MeowOutput {
+    struct MeowWithProfile {
         Meow meow;
         UserStorage.Profile profile;
     }
@@ -67,7 +68,7 @@ contract MeowStorage is BaseStorage {
     function getMeowById(uint256 _id)
         external
         view
-        returns (MeowOutput memory)
+        returns (MeowWithProfile memory)
     {
         // check if exists
         require(meows[_id].id != 0);
@@ -77,150 +78,15 @@ contract MeowStorage is BaseStorage {
         address _userStorageAddr = _manager.getAddress("UserStorage");
         UserStorage _userStorage = UserStorage(_userStorageAddr);
         return
-            MeowOutput(meows[_id], _userStorage.getProfile(meowToProfile[_id]));
+            MeowWithProfile(
+                meows[_id],
+                _userStorage.getProfile(meowToProfile[_id])
+            );
     }
 
-    /// @notice get meows associated to author in provided range
-    /// @dev For performance reasons range must be provided
-    /// @param _profileId meow profile id
-    /// @param _offset start offset position to get meows from
-    /// @param _count amount of meows to get
-    /// @return meows user's meows in range
-    function getMeowsForProfile(
-        uint256 _profileId,
-        uint256 _offset,
-        uint256 _count
-    ) external view returns (MeowOutput[] memory) {
-        // get manager
-        ContractManager _manager = ContractManager(managerAddr);
-        // retrieve address for user storage
-        address _userStorageAddr = _manager.getAddress("UserStorage");
-        UserStorage _userStorage = UserStorage(_userStorageAddr);
-        uint256 _resultIndex = 0;
-        MeowOutput[] memory _result = new MeowOutput[](_count);
-        uint256 _cursor = lastMeowId - _offset;
-        for (
-            uint256 i = _cursor;
-            i >= _cursor - _count && _resultIndex < _count;
-            i--
-        ) {
-            if (meowToProfile[i] == _profileId) {
-                _result[_resultIndex] = MeowOutput(
-                    meows[i],
-                    _userStorage.getProfile(meowToProfile[meows[i].id])
-                );
-                _resultIndex++;
-            }
-        }
-        return _result;
-    }
-
-    /// @notice get _count meows starting from latest from offset published by account followed by calling user
-    /// @param _offset start offset position to get meows from
-    /// @param _count amount of meows to get
-    /// @return meows in feed
-    function getMeowsAggregatedByFollowing(uint256 _offset, uint256 _count)
-        external
-        view
-        returns (MeowOutput[] memory)
-    {
-        // get manager
-        ContractManager _manager = ContractManager(managerAddr);
-        // retrieve address for user storage
-        address _userStorageAddr = _manager.getAddress("UserStorage");
-        UserStorage _userStorage = UserStorage(_userStorageAddr);
-        require(_userStorage.profileExists(tx.origin));
-        uint256 _profileId = _userStorage.addressToId(tx.origin);
-        // get following
-        uint256[] memory _following = _userStorage.getFollowing(_profileId);
-        // iter over feed
-        uint256 _resultIndex = 0;
-        MeowOutput[] memory _result = new MeowOutput[](_count);
-        uint256 _cursor = lastMeowId - _offset;
-        for (
-            uint256 i = _cursor;
-            i >= _cursor - _count && _resultIndex < _count;
-            i--
-        ) {
-            if (meowPublishedByFollowedProfile(_following, meowToProfile[i])) {
-                _result[_resultIndex] = MeowOutput(
-                    meows[i],
-                    _userStorage.getProfile(meowToProfile[meows[i].id])
-                );
-                _resultIndex++;
-            }
-        }
-        return _result;
-    }
-
-    /// @notice get meows which contains the provided hashtag
-    /// @dev For performance reasons range must be provided
-    /// @param _hashtag hashtag to search in meows
-    /// @param _offset start offset position to get meows from
-    /// @param _count amount of meows to get
-    /// @return meows user's meows in range
-    function getMeowsByHashtag(
-        string memory _hashtag,
-        uint256 _offset,
-        uint256 _count
-    ) external view returns (MeowOutput[] memory) {
-        // get manager
-        ContractManager _manager = ContractManager(managerAddr);
-        // retrieve address for user storage
-        address _userStorageAddr = _manager.getAddress("UserStorage");
-        UserStorage _userStorage = UserStorage(_userStorageAddr);
-        uint256 _resultIndex = 0;
-        MeowOutput[] memory _result = new MeowOutput[](_count);
-        uint256 _cursor = lastMeowId - _offset;
-        for (
-            uint256 i = _cursor;
-            i >= _cursor - _count && _resultIndex < _count;
-            i--
-        ) {
-            if (hashtagsContains(meows[i].hashtags, _hashtag)) {
-                _result[_resultIndex] = MeowOutput(
-                    meows[i],
-                    _userStorage.getProfile(meowToProfile[meows[i].id])
-                );
-                _resultIndex++;
-            }
-        }
-        return _result;
-    }
-
-    /// @notice check whether the provided profile id is contained in the following list
-    /// @param _following list of followed profiles
-    /// @param _profileId profile id to search for
-    /// @return yesno is profileid in following?
-    function meowPublishedByFollowedProfile(
-        uint256[] memory _following,
-        uint256 _profileId
-    ) private pure returns (bool) {
-        for (uint256 i = 0; i < _following.length; i++) {
-            if (_following[i] == _profileId) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /// @notice Checks whether meow hashtags contain provided argument
-    /// @param _hashtags meow hashtags
-    /// @param _hashtag hashtag to search
-    /// @return yesno contains hashtag
-    function hashtagsContains(string[] memory _hashtags, string memory _hashtag)
-        private
-        pure
-        returns (bool)
-    {
-        for (uint256 i = 0; i < _hashtags.length; i++) {
-            if (
-                keccak256(abi.encodePacked(_hashtags[i])) ==
-                keccak256(abi.encodePacked(_hashtag))
-            ) {
-                return true;
-            }
-        }
-        return false;
+    /// @notice get the id of the last meow published
+    /// @return id id of the last meow published
+    function getLastMeowId() external view returns (uint256) {
+        return lastMeowId;
     }
 }

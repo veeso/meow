@@ -176,4 +176,17 @@ describe("UserStorage", function () {
       )
     ).to.be.rejectedWith(Error);
   });
+
+  it("should set bio", async () => {
+    const { userStorage } = await deployContract();
+    await userStorage.createProfile("veeso_dev");
+    await userStorage.setBiography("my name is veeso");
+    const profile = await userStorage.getUserProfile();
+    expect(profile.biography).to.be.equal("my name is veeso");
+  });
+
+  it("should not set avatar for unexisting account", async () => {
+    const { userStorage } = await deployContract();
+    await expect(userStorage.setBiography("omar")).to.be.rejectedWith(Error);
+  });
 });
