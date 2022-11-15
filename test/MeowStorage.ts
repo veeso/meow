@@ -135,6 +135,26 @@ describe("MeowStorage", function () {
     expect(meows[2].id.toNumber()).to.be.equal(1);
   });
 
+  it("should return meows by following", async () => {
+    const { meowStorage, userStorage, otherAccount } = await deployContract();
+    const [_, thirdAccount] = await ethers.getSigners();
+    await userStorage.createProfile("veeso_dev");
+    await userStorage.connect(otherAccount).createProfile("shibetoshi");
+    await userStorage.connect(thirdAccount).createProfile("omar");
+    await meowStorage.publish("1", ["web3", "ethereum"], 1668175551);
+    await userStorage.follow(2);
+    await userStorage.follow(3);
+    await meowStorage.connect(otherAccount).publish("2", [], 1668175551);
+    await meowStorage.connect(thirdAccount).publish("3", [], 1668175551);
+    await meowStorage.connect(otherAccount).publish("4", [], 1668175551);
+    await meowStorage.connect(otherAccount).publish("5", [], 1668175551);
+
+    const meows = await meowStorage.getMeowsAggregatedByFollowing(1, 2);
+    expect(meows.length).to.be.equal(2);
+    expect(meows[0].id.toNumber()).to.be.equal(4);
+    expect(meows[1].id.toNumber()).to.be.equal(3);
+  });
+
   it("should return meows by hashtags", async () => {
     const { meowStorage, userStorage } = await deployContract();
     await userStorage.createProfile("veeso_dev");

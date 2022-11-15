@@ -90,6 +90,41 @@ contract MeowStorage is BaseStorage {
         return _result;
     }
 
+    /// @notice get _count meows starting from latest from offset published by account followed by calling user
+    /// @param _offset start offset position to get meows from
+    /// @param _count amount of meows to get
+    /// @return meows in feed
+    function getMeowsAggregatedByFollowing(uint256 _offset, uint256 _count)
+        external
+        view
+        returns (Meow[] memory)
+    {
+        // get manager
+        ContractManager _manager = ContractManager(managerAddr);
+        // retrieve address for user storage
+        address _userStorageAddr = _manager.getAddress("UserStorage");
+        UserStorage _userStorage = UserStorage(_userStorageAddr);
+        require(_userStorage.profileExists(tx.origin));
+        uint256 _profileId = _userStorage.addressToId(tx.origin);
+        // get following
+        uint256[] memory _following = _userStorage.getFollowing(_profileId);
+        // iter over feed
+        uint256 _resultIndex = 0;
+        Meow[] memory _result = new Meow[](_count);
+        uint256 _cursor = lastMeowId - _offset;
+        for (
+            uint256 i = _cursor;
+            i >= _cursor - _count && _resultIndex < _count;
+            i--
+        ) {
+            if (meowPublishedByFollowedProfile(_following, meowToProfile[i])) {
+                _result[_resultIndex] = meows[i];
+                _resultIndex++;
+            }
+        }
+        return _result;
+    }
+
     /// @notice get meows which contains the provided hashtag
     /// @dev For performance reasons range must be provided
     /// @param _hashtag hashtag to search in meows
@@ -115,6 +150,22 @@ contract MeowStorage is BaseStorage {
             }
         }
         return _result;
+    }
+
+    /// @notice check whether the provided profile id is contained in the following list
+    /// @param _following list of followed profiles
+    /// @param _profileId profile id to search for
+    /// @return yesno is profileid in following?
+    function meowPublishedByFollowedProfile(
+        uint256[] memory _following,
+        uint256 _profileId
+    ) private pure returns (bool) {
+        for (uint256 i = 0; i < _following.length; i++) {
+            if (_following[i] == _profileId) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /// @notice Checks whether meow hashtags contain provided argument
