@@ -2,6 +2,8 @@ import * as React from "react";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components";
 import { useMetaMask } from "metamask-react";
+import Image from "react-bootstrap/Image";
+import Typewriter from "typewriter-effect";
 
 import SignUpForm from "../components/SignUpForm";
 import SignInForm from "../components/SignInForm";
@@ -19,6 +21,15 @@ const Container = styled.div`
     margin-left: 0;
     width: 100%;
   }
+`;
+
+const Intro = styled.div`
+  text-align: center;
+`;
+
+const Logo = styled(Image)`
+  height: auto;
+  width: 50%;
 `;
 
 interface Props {
@@ -74,6 +85,22 @@ const Login = (props: Props) => {
 
   return (
     <Container>
+      <Intro>
+        <Typewriter
+          options={{
+            strings: [
+              "Welcome to ReMeow",
+              "The fully decentralized social network",
+              "Powered by Polygon",
+            ],
+            autoStart: true,
+            loop: true,
+            wrapperClassName: "typewriter-title",
+            cursorClassName: "typewriter-title--cursor",
+          }}
+        />
+        <Logo src="/assets/images/meow.png" />
+      </Intro>
       <SignUpForm signUp={onSignUp} />
       <hr />
       <SignInForm signIn={onSignIn} />

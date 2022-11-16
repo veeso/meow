@@ -116,7 +116,7 @@ const Topbar = (props: Props) => {
       <DesktopHeader>
         <LogoSection onClick={() => navigate("/")}>
           <Logo src="/assets/images/meow.png" />
-          <Title>Meow</Title>
+          <Title>ReMeow</Title>
         </LogoSection>
 
         <SearchSection hidden={props.profile === undefined}>
