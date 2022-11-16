@@ -204,6 +204,16 @@ contract UserStorage is BaseStorage {
         return profiles[_sender].id;
     }
 
+    /// @notice send a tip from caller's wallet to address associated to profile
+    /// @param _profileId profile to send the tip to
+    function sendTip(uint256 _profileId) public payable {
+        address payable _addr = payable(profilesOwners[_profileId]);
+        if (_addr == address(0)) {
+            revert("no such user");
+        }
+        _addr.transfer(msg.value);
+    }
+
     /// @notice Returns whether list of address contains address
     /// @param _profiles list to search in
     /// @param _profile the profile to search

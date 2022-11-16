@@ -235,8 +235,23 @@ describe("UserStorage", function () {
     expect(profile.biography).to.be.equal("my name is veeso");
   });
 
-  it("should not set avatar for unexisting account", async () => {
+  it("should not set bio for unexisting account", async () => {
     const { userStorage } = await deployContract();
     await expect(userStorage.setBiography("omar")).to.be.rejectedWith(Error);
+  });
+
+  it("should send tip", async () => {
+    const { userStorage, otherAccount } = await deployContract();
+    await userStorage.createProfile("veeso");
+    await userStorage.connect(otherAccount).createProfile("doge");
+    await userStorage.sendTip(BigNumber.from(2), { value: 1280 });
+  });
+
+  it("should not send tip to unexisting account", async () => {
+    const { userStorage } = await deployContract();
+    await userStorage.createProfile("veeso");
+    await expect(userStorage.sendTip(BigNumber.from(2))).to.be.rejectedWith(
+      Error
+    );
   });
 });
