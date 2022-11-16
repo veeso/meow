@@ -19,6 +19,7 @@ contract MeowStorage is BaseStorage {
         uint256 id;
         string text;
         string[] hashtags;
+        uint256[] taggedProfiles;
         uint128 epoch;
     }
 
@@ -44,10 +45,12 @@ contract MeowStorage is BaseStorage {
     /// @dev Explain to a developer any extra details
     /// @param _text meow text
     /// @param _hashtags associated to meow
+    /// @param _taggedProfiles profiles tagged in meow
     /// @param _epoch of the publication time
     function publish(
         string memory _text,
         string[] memory _hashtags,
+        uint256[] memory _taggedProfiles,
         uint128 _epoch
     ) external {
         // check text length
@@ -60,9 +63,22 @@ contract MeowStorage is BaseStorage {
         // user must exist
         require(_userStorage.profileExists(tx.origin));
         uint256 _profileId = _userStorage.addressToId(tx.origin);
+        // check tagged profiles exist
+        uint256 _lastProfileId = _userStorage.getLastProfileId();
+        for (uint256 i = 0; i < _taggedProfiles.length; i++) {
+            require(
+                _taggedProfiles[i] > 0 && _taggedProfiles[i] <= _lastProfileId
+            );
+        }
         // increase id by 1
         lastMeowId++;
-        meows[lastMeowId] = Meow(lastMeowId, _text, _hashtags, _epoch);
+        meows[lastMeowId] = Meow(
+            lastMeowId,
+            _text,
+            _hashtags,
+            _taggedProfiles,
+            _epoch
+        );
         meowToProfile[lastMeowId] = _profileId;
         emit MeowPublished(_profileId, lastMeowId);
     }
@@ -80,8 +96,9 @@ contract MeowStorage is BaseStorage {
         uint256 _profileId = _userStorage.addressToId(tx.origin);
         // increase id by 1
         lastMeowId++;
-        string[] memory hashtags = new string[](0);
-        meows[lastMeowId] = Meow(lastMeowId, "", hashtags, _epoch);
+        string[] memory _hashtags = new string[](0);
+        uint256[] memory _profiles = new uint256[](0);
+        meows[lastMeowId] = Meow(lastMeowId, "", _hashtags, _profiles, _epoch);
         meowToProfile[lastMeowId] = _profileId;
         // save remeow
         remeows[lastMeowId] = _meowId;

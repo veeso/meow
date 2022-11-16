@@ -51,24 +51,30 @@ describe("MeowStorage", function () {
   }
 
   it("Should post meow", async () => {
-    const { meowStorage, userStorage } = await deployContract();
+    const { meowStorage, userStorage, otherAccount } = await deployContract();
     // create test user
     await userStorage.createProfile("veeso_dev");
+    await userStorage
+      .connect(otherAccount)
+      .createProfile("the_real_maine_coon");
 
     await meowStorage.publish(
-      "Hello, world! I'm sending this from my #polygon wallet! #web3 #solidity #blockchain",
+      "Hello, @the_real_maine_coon! I'm sending this from my #polygon wallet! #web3 #solidity #blockchain",
       ["polygon", "web3", "solidity", "blockchain"],
+      [2],
       1668175551
     );
     const meow = await meowStorage.getMeowById(BigNumber.from(1));
     expect(meow.meow.id.toNumber()).to.be.equal(1);
     expect(meow.profile.id.toNumber()).to.be.equal(1);
     expect(meow.meow.text).to.be.equal(
-      "Hello, world! I'm sending this from my #polygon wallet! #web3 #solidity #blockchain"
+      "Hello, @the_real_maine_coon! I'm sending this from my #polygon wallet! #web3 #solidity #blockchain"
     );
     expect(JSON.stringify(meow.meow.hashtags)).to.be.equal(
       JSON.stringify(["polygon", "web3", "solidity", "blockchain"])
     );
+    expect(meow.meow.taggedProfiles.length).to.be.equal(1);
+    expect(meow.meow.taggedProfiles[0].toNumber()).to.be.equal(2);
     expect(meow.meow.epoch).to.be.equal(1668175551);
     expect(meow.remeowedId.toNumber()).to.be.equal(0);
   });
@@ -82,6 +88,7 @@ describe("MeowStorage", function () {
       meowStorage.publish(
         "Hello, world! I'm sending this from my #polygon wallet! #web3 #solidity #blockchain",
         ["polygon", "web3", "solidity", "blockchain"],
+        [],
         1668175551
       )
     )
@@ -97,6 +104,7 @@ describe("MeowStorage", function () {
       meowStorage.publish(
         "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         [],
+        [],
         1668175551
       )
     ).to.be.rejectedWith(Error);
@@ -106,7 +114,7 @@ describe("MeowStorage", function () {
     const { meowStorage } = await deployContract();
     // create test user
     await expect(
-      meowStorage.publish("hello!", [], 1668175551)
+      meowStorage.publish("hello!", [], [], 1668175551)
     ).to.be.rejectedWith(Error);
   });
 
@@ -118,6 +126,7 @@ describe("MeowStorage", function () {
     await meowStorage.publish(
       "Hello, world! I'm sending this from my #polygon wallet! #web3 #solidity #blockchain",
       ["polygon", "web3", "solidity", "blockchain"],
+      [],
       1668175551
     );
     const lastId = await meowStorage.getLastMeowId();
@@ -132,6 +141,7 @@ describe("MeowStorage", function () {
     await meowStorage.publish(
       "Hello, world! I'm sending this from my #polygon wallet! #web3 #solidity #blockchain",
       ["polygon", "web3", "solidity", "blockchain"],
+      [],
       1668175551
     );
     await meowStorage.remeow(BigNumber.from(1), 1668175551);
@@ -151,6 +161,7 @@ describe("MeowStorage", function () {
     await meowStorage.publish(
       "Hello, world! I'm sending this from my #polygon wallet! #web3 #solidity #blockchain",
       ["polygon", "web3", "solidity", "blockchain"],
+      [],
       1668175551
     );
     await expect(
