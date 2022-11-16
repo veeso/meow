@@ -17,6 +17,7 @@ const App = () => {
   const { account, status, ethereum } = useMetaMask();
   const navigate = useNavigate();
   // states
+  const [authedAccount, setAuthedAccount] = React.useState<string>();
   const [profile, setProfile] = React.useState<ProfileEntity>();
 
   const getSignedInUser = async () => {
@@ -35,6 +36,9 @@ const App = () => {
         } else {
           setProfile(undefined);
         }
+        if (account) {
+          setAuthedAccount(account);
+        }
       })
       .catch(() => {
         setProfile(undefined);
@@ -50,6 +54,12 @@ const App = () => {
       navigate("/login");
     }
   }, [status]);
+
+  React.useEffect(() => {
+    if (account && authedAccount && account !== authedAccount) {
+      window.location.href = "/";
+    }
+  }, [account]);
 
   // on username changed
   React.useEffect(() => {
@@ -113,7 +123,10 @@ const App = () => {
             path="/profile/:profileId"
             element={profile ? <Profile userProfile={profile} /> : <></>}
           />
-          <Route path="/tag/:tag" element={<Tag />} />
+          <Route
+            path="/tag/:tag"
+            element={profile ? <Tag userProfile={profile} /> : <></>}
+          />
         </Routes>
       </main>
     </>
