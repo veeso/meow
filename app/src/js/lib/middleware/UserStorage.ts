@@ -23,6 +23,11 @@ export default class UserStorage {
     return this.adaptProfile(profile);
   }
 
+  async getUserByUsername(username: string): Promise<Profile> {
+    const profile = await this.client.getProfileByUsername(username);
+    return this.adaptProfile(profile);
+  }
+
   async getProfile(id: BigNumber): Promise<Profile> {
     const profile = await this.client.getProfile(id);
     return this.adaptProfile(profile);
@@ -78,9 +83,7 @@ export default class UserStorage {
       username: web3.utils.hexToUtf8(profile.username),
       biography: profile.biography,
       avatarURI:
-        profile.avatarURI.length === 0
-          ? DEFAULT_AVATAR_URI.src
-          : profile.avatarURI,
+        profile.avatarURI.length === 0 ? DEFAULT_AVATAR_URI : profile.avatarURI,
     };
   }
 }

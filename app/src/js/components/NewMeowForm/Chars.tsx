@@ -35,7 +35,7 @@ const Chars = (props: Props) => {
   const progressBarVariant = props.chars > props.limit ? "danger" : "primary";
 
   return (
-    <Container>
+    <Container hidden={props.chars === 0}>
       <CharsProgressBar
         variant={progressBarVariant}
         now={props.chars}

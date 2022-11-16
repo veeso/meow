@@ -48,6 +48,7 @@ interface Props {
 }
 
 const Search = (props: Props) => {
+  const [text, setText] = React.useState<string>("");
   const [query, setQuery] = React.useState<string>("");
   const [results, setResults] = React.useState<Array<SearchResult>>();
   const [error, setError] = React.useState<boolean>(false);
@@ -60,6 +61,12 @@ const Search = (props: Props) => {
     () => debounce(changeHandler, 300),
     []
   );
+
+  const onResultClicked = () => {
+    setQuery("");
+    setResults(undefined);
+    setText("");
+  };
 
   React.useEffect(() => {
     if (query.length > 0) {
@@ -103,9 +110,13 @@ const Search = (props: Props) => {
               <Col lg={10}>
                 <Form.Control
                   placeholder="Search..."
-                  onChange={debouncedEventHandler}
+                  onChange={(ev) => {
+                    debouncedEventHandler(ev);
+                    setText((ev.target as HTMLInputElement).value);
+                  }}
                   size="lg"
                   style={{ width: "100%" }}
+                  value={text}
                 />
               </Col>
             </Row>
@@ -115,7 +126,7 @@ const Search = (props: Props) => {
           <Alert hidden={!error} variant="danger">
             Unable to load search results
           </Alert>
-          <Results entries={results} />
+          <Results onResultClicked={onResultClicked} entries={results} />
         </ResultsContainer>
       </Container>
     </>

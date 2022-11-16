@@ -38,7 +38,12 @@ const Image = styled(BootstrapImage)`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: end;
+  margin-top: 8px;
   padding: 0 8px;
+`;
+
+const Error = styled(Alert)`
+  margin: 8px;
 `;
 
 interface Props {
@@ -74,6 +79,7 @@ const NewMeowForm = (props: Props) => {
         .then(() => {
           setMeow("");
           setPublishing(false);
+          setError(undefined);
         })
         .catch((e) => {
           setError(`Failed to publish post: ${e.message}`);
@@ -103,9 +109,9 @@ const NewMeowForm = (props: Props) => {
             />
             <Chars chars={meow.length} limit={MAX_MEOW_LENGTH} />
           </Form.Group>
-          <Alert variant="danger" hidden={error === undefined}>
+          <Error variant="danger" hidden={error === undefined}>
             {error}
-          </Alert>
+          </Error>
           <ButtonContainer>
             <Button variant="primary" onClick={submitMeow} disabled={disabled}>
               <Spinner

@@ -1,5 +1,3 @@
-import { BigNumber } from "ethers";
-
 export const ABI = [
   {
     inputs: [
@@ -125,6 +123,47 @@ export const ABI = [
       },
     ],
     name: "getProfile",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "uint256",
+            name: "id",
+            type: "uint256",
+          },
+          {
+            internalType: "bytes32",
+            name: "username",
+            type: "bytes32",
+          },
+          {
+            internalType: "string",
+            name: "biography",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "avatarURI",
+            type: "string",
+          },
+        ],
+        internalType: "struct UserStorage.Profile",
+        name: "profile",
+        type: "tuple",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "_username",
+        type: "string",
+      },
+    ],
+    name: "getProfileByUsername",
     outputs: [
       {
         components: [
@@ -292,7 +331,7 @@ export const ABI = [
 ];
 
 export const USER_STORAGE_ADDRESS =
-  "0x366f8aE6b2ADDce26440C4E5Fd7AE4c3555DED14";
+  "0xd0D5954a5572742c30C174FA2EF5C05FA1a4d586";
 
 export interface Profile {
   id: string;

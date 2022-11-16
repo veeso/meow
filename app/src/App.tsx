@@ -2,7 +2,7 @@ import * as React from "react";
 import { hot } from "react-hot-loader/root";
 import { useMetaMask } from "metamask-react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import web3 from "web3";
+import { BigNumber } from "ethers";
 
 import Login from "./js/pages/Login";
 import Topbar from "./js/components/Topbar";
@@ -72,13 +72,23 @@ const App = () => {
     // search user
     if (account && ethereum) {
       const middleware = new UserStorage(new Web3Client(account, ethereum));
-      const users = await (
-        await middleware.searchUser(query, 8)
-      ).map((profile) => ({
-        image: profile.avatarURI,
-        text: profile.username,
-        uri: `/profile/${profile.id.toString()}`,
-      }));
+      let foundId = BigNumber.from(0);
+      try {
+        const profile = await middleware.getUserByUsername(query);
+        foundId = profile.id;
+        results.push({
+          image: profile.avatarURI,
+          text: profile.username,
+          uri: `/profile/${profile.id.toString()}`,
+        });
+      } catch (_) {}
+      const users = (await middleware.searchUser(query, 8))
+        .filter((profile) => !profile.id.eq(foundId))
+        .map((profile) => ({
+          image: profile.avatarURI,
+          text: profile.username,
+          uri: `/profile/${profile.id.toString()}`,
+        }));
       results = [...results, ...users];
     }
 

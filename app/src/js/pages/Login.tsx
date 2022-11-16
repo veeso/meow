@@ -28,26 +28,33 @@ const Login = (props: Props) => {
   const { account, ethereum, connect } = useMetaMask();
 
   const onSignIn = async () => {
-    connect()
-      .then(() => {
-        props.onSignedIn();
-      })
-      .catch((e) => {
-        throw new Error(`failed to connect to metamask: ${e.message}`);
-      });
+    try {
+      await connect();
+      await getUserProfile();
+    } catch (_) {
+      throw new Error("cannot find any user associated to your wallet");
+    }
   };
 
   const onSignUp = async (username: string) => {
     if (!account || !ethereum) {
-      connect()
-        .then(() => {
-          signUp(username);
-        })
-        .catch((e) => {
-          throw new Error(`failed to connect to metamask: ${e.message}`);
-        });
+      try {
+        await connect();
+        await signUp(username);
+      } catch (e: any) {
+        throw new Error(`failed to connect to metamask: ${e.message}`);
+      }
     } else {
       signUp(username);
+    }
+  };
+
+  const getUserProfile = async () => {
+    if (account && ethereum) {
+      const middleware = new UserStorage(new Web3Client(account, ethereum));
+      return await middleware.getUserProfile();
+    } else {
+      throw new Error("metamask not connected");
     }
   };
 

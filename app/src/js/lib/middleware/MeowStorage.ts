@@ -17,13 +17,38 @@ export default class MeowStorage {
   }
 
   async publishMeow(text: string): Promise<void> {
-    const regex = new RegExp(/#[a-zA-Z0-9_]+/, "g");
-    const hashtags = text.match(regex)?.map((hashtag) => hashtag.substring(1));
+    const hashtagRegex = new RegExp(/#[a-zA-Z0-9_]+/, "g");
+    const hashtags = text
+      .match(hashtagRegex)
+      ?.map((hashtag) => hashtag.substring(1));
+    const profileRegex = new RegExp(/@[a-zA-Z0-9_]+/, "g");
+    let profileMatch = text.match(profileRegex);
+    let profiles: Array<BigNumber> = new Array();
+    if (profileMatch) {
+      profiles = await Promise.all(
+        profileMatch.map(async (username) => {
+          try {
+            const profile = await this.client.getProfileByUsername(
+              username.substring(1)
+            );
+            return BigNumber.from(profile.id);
+          } catch (_) {
+            throw new Error(`No such username: ${username}`);
+          }
+        })
+      );
+    }
+
     return await this.client.publishMeow(
       text,
       hashtags ? hashtags : [],
+      profiles,
       new Date()
     );
+  }
+
+  async remeow(id: BigNumber): Promise<void> {
+    return await this.client.remeow(id, new Date());
   }
 
   async getMeowsForProfile(
@@ -41,7 +66,9 @@ export default class MeowStorage {
       i >= arrayCursor.sub(count) && resultIndex < count && i > ZERO;
       i = i.sub(1)
     ) {
-      const meow = this.adaptMeowWithProfile(await this.client.getMeowById(i));
+      const meow = await this.adaptMeowWithProfile(
+        await this.client.getMeowById(i)
+      );
       if (meow.profile.id.eq(profile.id)) {
         result.push(meow);
         resultIndex = resultIndex.add(1);
@@ -67,9 +94,16 @@ export default class MeowStorage {
       i >= cursor.sub(count) && resultIndex < count && i > ZERO;
       i = i.sub(1)
     ) {
-      const meow = this.adaptMeowWithProfile(await this.client.getMeowById(i));
-      let includes = following.some((val) => val.eq(meow.profile.id));
-      if (includes || meow.profile.id.eq(profile.id)) {
+      const meow = await this.adaptMeowWithProfile(
+        await this.client.getMeowById(i)
+      );
+      // from followed profile
+      let fromFollowed = following.some((val) => val.eq(meow.profile.id));
+      // am I tagged?
+      let tagged = meow.taggedProfiles.some((id) => id.eq(profile.id));
+      // did I write this meow?
+      const isFromMe = meow.profile.id.eq(profile.id);
+      if (fromFollowed || isFromMe || tagged) {
         result.push(meow);
         resultIndex = resultIndex.add(1);
       }
@@ -94,15 +128,19 @@ export default class MeowStorage {
       const meow = await this.client.getMeowById(i);
       console.log(meow.meow.hashtags);
       if (meow.meow.hashtags.includes(hashtag)) {
-        result.push(this.adaptMeowWithProfile(meow));
+        result.push(await this.adaptMeowWithProfile(meow));
         resultIndex = resultIndex.add(1);
       }
     }
     return result;
   }
 
-  private adaptMeowWithProfile(meow: MeowWithProfile): Meow {
-    return {
+  private async adaptMeowWithProfile(meow: MeowWithProfile): Promise<Meow> {
+    const remeowId = BigNumber.from(meow.remeowedId);
+    const taggedProfiles = meow.meow.taggedProfiles.map((id) =>
+      BigNumber.from(id)
+    );
+    const adapted = {
       id: BigNumber.from(meow.meow.id),
       text: meow.meow.text,
       profile: {
@@ -111,11 +149,20 @@ export default class MeowStorage {
         biography: meow.profile.biography,
         avatarURI:
           meow.profile.avatarURI.length === 0
-            ? DEFAULT_AVATAR_URI.src
+            ? DEFAULT_AVATAR_URI
             : meow.profile.avatarURI,
       },
       hashtags: meow.meow.hashtags,
+      taggedProfiles,
       date: new Date(parseInt(meow.meow.epoch)),
     };
+    if (remeowId.eq(ZERO)) {
+      return adapted;
+    }
+    // resolve remow
+    const originalMeow = await this.adaptMeowWithProfile(
+      await this.client.getMeowById(remeowId)
+    );
+    return { ...adapted, remeow: originalMeow };
   }
 }

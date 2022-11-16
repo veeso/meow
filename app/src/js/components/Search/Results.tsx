@@ -36,6 +36,7 @@ const Image = styled(BootStrapImage)`
 
 interface Props {
   entries?: Array<SearchResult>;
+  onResultClicked: () => void;
 }
 
 const Results = (props: Props) => {
@@ -47,7 +48,7 @@ const Results = (props: Props) => {
     );
     return (
       <Container key={i}>
-        <SearchLink to={entry.uri}>
+        <SearchLink to={entry.uri} onClick={props.onResultClicked}>
           {image}
           {entry.text}
         </SearchLink>

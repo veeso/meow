@@ -82,7 +82,7 @@ const Topbar = (props: Props) => {
   const navigate = useNavigate();
   const avatarURI = props.profile
     ? props.profile.avatarURI
-    : DEFAULT_AVATAR_URI.src;
+    : DEFAULT_AVATAR_URI;
 
   return (
     <Header>

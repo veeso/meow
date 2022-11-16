@@ -6,6 +6,7 @@ export default interface Meow {
   id: BigNumber;
   text: string;
   hashtags: Array<string>;
+  taggedProfiles: Array<BigNumber>;
   profile: Profile;
   date: Date;
   remeow?: Meow;

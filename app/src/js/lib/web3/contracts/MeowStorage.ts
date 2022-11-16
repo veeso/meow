@@ -1,4 +1,3 @@
-import { BigNumber } from "ethers";
 import { Profile } from "./UserStorage";
 
 export const ABI = [
@@ -64,6 +63,11 @@ export const ABI = [
                 type: "string[]",
               },
               {
+                internalType: "uint256[]",
+                name: "taggedProfiles",
+                type: "uint256[]",
+              },
+              {
                 internalType: "uint128",
                 name: "epoch",
                 type: "uint128",
@@ -100,6 +104,11 @@ export const ABI = [
             name: "profile",
             type: "tuple",
           },
+          {
+            internalType: "uint256",
+            name: "remeowedId",
+            type: "uint256",
+          },
         ],
         internalType: "struct MeowStorage.MeowWithProfile",
         name: "",
@@ -135,12 +144,35 @@ export const ABI = [
         type: "string[]",
       },
       {
+        internalType: "uint256[]",
+        name: "_taggedProfiles",
+        type: "uint256[]",
+      },
+      {
         internalType: "uint128",
         name: "_epoch",
         type: "uint128",
       },
     ],
     name: "publish",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_meowId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint128",
+        name: "_epoch",
+        type: "uint128",
+      },
+    ],
+    name: "remeow",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -174,18 +206,20 @@ export const ABI = [
 ];
 
 export const MEOW_STORAGE_ADDRESS =
-  "0xA5e283DCf80Ad8D067dC34084f4C07CC127DC7d7";
+  "0xA404a76df3911642A52dF14F88ca2d5D2412Fb74";
 
 // types
 
 export interface MeowWithProfile {
   meow: Meow;
   profile: Profile;
+  remeowedId: string;
 }
 
 export interface Meow {
   epoch: string;
   id: string;
   hashtags: Array<string>;
+  taggedProfiles: Array<string>; // ids
   text: string;
 }

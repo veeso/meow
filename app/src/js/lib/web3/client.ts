@@ -46,6 +46,13 @@ export default class Web3Client {
     return contract.methods.getProfile(id).call({ from: this.address });
   }
 
+  async getProfileByUsername(username: string): Promise<Profile> {
+    const contract = this.userStorageContract();
+    return contract.methods
+      .getProfileByUsername(username)
+      .call({ from: this.address });
+  }
+
   async follow(id: BigNumber): Promise<void> {
     const contract = this.userStorageContract();
     return contract.methods.follow(id).send({ from: this.address });
@@ -76,10 +83,22 @@ export default class Web3Client {
     return contract.methods.setAvatar(avatarURI).send({ from: this.address });
   }
 
-  async publishMeow(text: string, hashtags: Array<string>, date: Date) {
+  async publishMeow(
+    text: string,
+    hashtags: Array<string>,
+    taggedProfiles: Array<BigNumber>,
+    date: Date
+  ) {
     const contract = this.meowStorageContract();
     return contract.methods
-      .publish(text, hashtags, date.getTime())
+      .publish(text, hashtags, taggedProfiles, date.getTime())
+      .send({ from: this.address });
+  }
+
+  async remeow(id: BigNumber, date: Date) {
+    const contract = this.meowStorageContract();
+    return contract.methods
+      .remeow(id, date.getTime())
       .send({ from: this.address });
   }
 

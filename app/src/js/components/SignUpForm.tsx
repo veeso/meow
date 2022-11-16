@@ -35,7 +35,20 @@ const SignUpForm = (props: Props) => {
   const [submitted, setSubmitted] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>();
 
-  const disabled = username.length === 0 || submitted;
+  const isUsernameValid = () => {
+    if (username.length === 0 || username.length > 32) {
+      return false;
+    }
+    const regex = new RegExp(/^[a-zA-Z0-9_]+$/);
+    if (!username.match(regex)) {
+      return false;
+    }
+    return true;
+  };
+
+  const validUsername = isUsernameValid();
+
+  const disabled = username.length === 0 || submitted || !validUsername;
 
   const onType = (event: React.FormEvent<EventTarget>) => {
     const text = (event.target as HTMLInputElement).value;
@@ -72,7 +85,12 @@ const SignUpForm = (props: Props) => {
             onChange={onType}
             size="lg"
             value={username}
+            isValid={validUsername}
+            isInvalid={!validUsername && username.length > 0}
           />
+          <Form.Text className="muted">
+            Only alphanumerics and underscore
+          </Form.Text>
         </Form.Group>
         <Error variant="danger" hidden={error === undefined}>
           {error}
@@ -86,7 +104,10 @@ const SignUpForm = (props: Props) => {
               role="status"
               aria-hidden="true"
             />
-            Sign up <ArrowRightOnRectangleIcon width={16} />
+            Sign up{" "}
+            <span hidden={submitted}>
+              <ArrowRightOnRectangleIcon width={16} />
+            </span>
           </Button>
         </ButtonContainer>
       </Form>
