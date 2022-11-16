@@ -68,6 +68,28 @@ contract UserStorage is BaseStorage {
         return profiles[tx.origin];
     }
 
+    /// @notice get profile by username
+    /// @dev check if profile id is zero, to get whether exists or not
+    /// @param _username username to look up for
+    /// @return profile associated to username
+    function getProfileByUsername(string memory _username)
+        external
+        view
+        returns (Profile memory profile)
+    {
+        bytes32 _busername;
+        assembly {
+            _busername := mload(add(_username, 32))
+        }
+        for (uint256 i = 1; i <= lastProfileId; i++) {
+            address owner = profilesOwners[i];
+            if (profiles[owner].username == _busername) {
+                return profiles[owner];
+            }
+        }
+        revert("username not found");
+    }
+
     /// @notice follow wallet associated to account
     /// @dev must push both following to sender and followers to wallet
     /// @param _profileId to follow

@@ -76,6 +76,24 @@ describe("UserStorage", function () {
     expect(profile.toNumber()).to.be.equal(1);
   });
 
+  it("should find profile by username", async () => {
+    const { userStorage, otherAccount } = await deployContract();
+    // create test user
+    await userStorage.createProfile("veeso_dev");
+    await userStorage.connect(otherAccount).createProfile("shibe");
+    const profile = await userStorage.getProfileByUsername("shibe");
+    expect(profile.id.toNumber()).to.be.equal(2);
+  });
+
+  it("should fail getting profile by username", async () => {
+    const { userStorage } = await deployContract();
+    // create test user
+    await userStorage.createProfile("veeso_dev");
+    await expect(userStorage.getProfileByUsername("omar")).to.be.rejectedWith(
+      Error
+    );
+  });
+
   it("should follow profile", async () => {
     const { userStorage, otherAccount } = await deployContract();
     // create test user
