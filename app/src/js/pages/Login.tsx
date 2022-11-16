@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useMetaMask } from "metamask-react";
 
 import SignUpForm from "../components/SignUpForm";
+import SignInForm from "../components/SignInForm";
 import Web3Client from "../lib/web3/client";
 import UserStorage from "../lib/middleware/UserStorage";
 
@@ -24,21 +25,46 @@ interface Props {
 }
 
 const Login = (props: Props) => {
-  const { account, ethereum } = useMetaMask();
+  const { account, ethereum, connect } = useMetaMask();
+
+  const onSignIn = async () => {
+    connect()
+      .then(() => {
+        props.onSignedIn();
+      })
+      .catch((e) => {
+        throw new Error(`failed to connect to metamask: ${e.message}`);
+      });
+  };
+
+  const onSignUp = async (username: string) => {
+    if (!account || !ethereum) {
+      connect()
+        .then(() => {
+          signUp(username);
+        })
+        .catch((e) => {
+          throw new Error(`failed to connect to metamask: ${e.message}`);
+        });
+    } else {
+      signUp(username);
+    }
+  };
 
   const signUp = async (username: string) => {
-    if (!account || !ethereum) {
-      throw new Error("Please, connect your wallet via Metamask first");
+    if (account && ethereum) {
+      const middleware = new UserStorage(new Web3Client(account, ethereum));
+      return await middleware.createProfile(username).then(() => {
+        props.onSignedIn();
+      });
     }
-    const middleware = new UserStorage(new Web3Client(account, ethereum));
-    return await middleware.createProfile(username).then(() => {
-      props.onSignedIn();
-    });
   };
 
   return (
     <Container>
-      <SignUpForm signUp={signUp} />
+      <SignUpForm signUp={onSignUp} />
+      <hr />
+      <SignInForm signIn={onSignIn} />
     </Container>
   );
 };

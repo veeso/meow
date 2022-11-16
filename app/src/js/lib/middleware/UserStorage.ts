@@ -5,8 +5,6 @@ import Web3Client from "../web3/client";
 import web3 from "web3";
 import { Profile as ProfileEth } from "../web3/contracts/UserStorage";
 import { DEFAULT_AVATAR_URI } from "../const";
-import Results from "../../components/Search/Results";
-import { profile } from "console";
 
 const ZERO = BigNumber.from(0);
 export default class UserStorage {
@@ -80,7 +78,9 @@ export default class UserStorage {
       username: web3.utils.hexToUtf8(profile.username),
       biography: profile.biography,
       avatarURI:
-        profile.avatarURI.length === 0 ? DEFAULT_AVATAR_URI : profile.avatarURI,
+        profile.avatarURI.length === 0
+          ? DEFAULT_AVATAR_URI.src
+          : profile.avatarURI,
     };
   }
 }

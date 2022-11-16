@@ -8,4 +8,5 @@ export default interface Meow {
   hashtags: Array<string>;
   profile: Profile;
   date: Date;
+  remeow?: Meow;
 }

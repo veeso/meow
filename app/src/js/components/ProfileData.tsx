@@ -18,7 +18,7 @@ import Following from "./ProfileData/Following";
 import UserStorage from "../lib/middleware/UserStorage";
 
 const Image = styled(BootstrapImage)`
-  height: 96px;
+  height: 128px;
   margin-right: 8px;
 `;
 
@@ -69,14 +69,11 @@ const ProfileData = (props: Props) => {
   return (
     <Container fluid>
       <Row>
-        <Col lg={2}>
+        <Col lg={3}>
           <Image roundedCircle src={props.profile.avatarURI} />
         </Col>
-        <Col lg={2}>
+        <Col lg={9}>
           <Username>{props.profile.username}</Username>
-        </Col>
-        <Col style={{ justifyContent: "end" }} lg={8}>
-          {tools}
         </Col>
       </Row>
       <Row>
@@ -85,23 +82,24 @@ const ProfileData = (props: Props) => {
         </Col>
       </Row>
       <Row>
-        <Col lg={{ span: 2, offset: 2 }}>
+        <Col lg={{ span: 2, offset: 2 }} hidden={followers.length === 0}>
           <Button
-            hidden={followers.length === 0}
             onClick={() => setFollowersVisible(!followersVisible)}
             variant="light"
           >
             Followers
           </Button>
         </Col>
-        <Col lg={2}>
+        <Col lg={2} hidden={following.length === 0}>
           <Button
-            hidden={following.length === 0}
             onClick={() => setFollowingVisible(!followingVisible)}
             variant="light"
           >
             Following
           </Button>
+        </Col>
+        <Col style={{ justifyContent: "end" }} lg={8}>
+          {tools}
         </Col>
       </Row>
       <Overlay visible={followersVisible}>

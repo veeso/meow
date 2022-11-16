@@ -69,8 +69,7 @@ export default class MeowStorage {
     ) {
       const meow = this.adaptMeowWithProfile(await this.client.getMeowById(i));
       let includes = following.some((val) => val.eq(meow.profile.id));
-      console.log("figs", following, meow.profile.id, includes);
-      if (includes) {
+      if (includes || meow.profile.id.eq(profile.id)) {
         result.push(meow);
         resultIndex = resultIndex.add(1);
       }
@@ -112,7 +111,7 @@ export default class MeowStorage {
         biography: meow.profile.biography,
         avatarURI:
           meow.profile.avatarURI.length === 0
-            ? DEFAULT_AVATAR_URI
+            ? DEFAULT_AVATAR_URI.src
             : meow.profile.avatarURI,
       },
       hashtags: meow.meow.hashtags,

@@ -5,6 +5,7 @@ import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Spinner from "react-bootstrap/Spinner";
+import MetamaskLogo from "./MetamaskConnect/Logo";
 import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/solid";
 
 const Container = styled.div`
@@ -13,8 +14,13 @@ const Container = styled.div`
 
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: end;
+  justify-content: center;
   padding: 24px 8px;
+  width: 100%;
+  button {
+    font-size: 1.5em;
+    width: 80%;
+  }
 `;
 
 const FormTitle = styled.h2`
@@ -27,20 +33,14 @@ const Error = styled(Alert)`
 `;
 
 interface Props {
-  signUp: (username: string) => Promise<void>;
+  signIn: () => Promise<void>;
 }
 
-const SignUpForm = (props: Props) => {
-  const [username, setUsername] = React.useState<string>("");
+const SignInform = (props: Props) => {
   const [submitted, setSubmitted] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>();
 
-  const disabled = username.length === 0 || submitted;
-
-  const onType = (event: React.FormEvent<EventTarget>) => {
-    const text = (event.target as HTMLInputElement).value;
-    setUsername(text);
-  };
+  const disabled = submitted;
 
   const submit = () => {
     setSubmitted(true);
@@ -49,7 +49,7 @@ const SignUpForm = (props: Props) => {
   React.useEffect(() => {
     if (submitted) {
       props
-        .signUp(username)
+        .signIn()
         .then(() => {
           setError(undefined);
           setSubmitted(false);
@@ -64,16 +64,9 @@ const SignUpForm = (props: Props) => {
   return (
     <Container>
       <Form>
-        <FormTitle>Sign up</FormTitle>
-        <Form.Group controlId="sign-in">
-          <Form.Label>Username</Form.Label>
-          <Form.Control
-            placeholder="Enter username"
-            onChange={onType}
-            size="lg"
-            value={username}
-          />
-        </Form.Group>
+        <FormTitle>
+          Or sign in with Metamask <MetamaskLogo />
+        </FormTitle>
         <Error variant="danger" hidden={error === undefined}>
           {error}
         </Error>
@@ -86,7 +79,7 @@ const SignUpForm = (props: Props) => {
               role="status"
               aria-hidden="true"
             />
-            Sign up <ArrowRightOnRectangleIcon width={16} />
+            Sign in <ArrowRightOnRectangleIcon width={24} />
           </Button>
         </ButtonContainer>
       </Form>
@@ -94,4 +87,4 @@ const SignUpForm = (props: Props) => {
   );
 };
 
-export default hot(SignUpForm);
+export default hot(SignInform);
