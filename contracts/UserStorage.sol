@@ -31,11 +31,17 @@ contract UserStorage is BaseStorage {
     /// @notice Create user with provided username
     /// @param _username username
     function createProfile(string memory _username) external {
+        uint usernameLength = bytes(_username).length;
         require(profiles[tx.origin].id == 0);
-        require(bytes(_username).length <= 32);
+        require(usernameLength <= 32);
         bytes32 _busername;
         assembly {
             _busername := mload(add(_username, 32))
+        }
+        if (!isUsernameValid(_busername, usernameLength)) {
+            revert(
+                "invalid username; only alphanumeric and underscore is accepted"
+            );
         }
         lastProfileId++;
         profiles[tx.origin] = Profile(lastProfileId, _busername, "", "");
@@ -213,5 +219,26 @@ contract UserStorage is BaseStorage {
             }
         }
         return false;
+    }
+
+    /// @notice check whether username contains only alphanumeric and _
+    /// @param _username to check
+    /// @return yesno
+    function isUsernameValid(bytes32 _username, uint length)
+        private
+        pure
+        returns (bool)
+    {
+        for (uint i; i < length; i++) {
+            bytes1 char = _username[i];
+
+            if (
+                !(char >= 0x30 && char <= 0x39) && //9-0
+                !(char >= 0x41 && char <= 0x5A) && //A-Z
+                !(char >= 0x61 && char <= 0x7A) && //a-z
+                !(char == 0x5F) //underscore
+            ) return false;
+        }
+        return true;
     }
 }

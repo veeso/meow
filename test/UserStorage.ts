@@ -42,15 +42,17 @@ describe("UserStorage", function () {
   it("Should create profile", async () => {
     const { userStorage } = await deployContract();
     // create test user
-    await userStorage.createProfile("veeso_dev");
+    await userStorage.createProfile("veeso_dev97A");
     const profile = await userStorage.getProfile(1);
     expect(profile.id).to.be.equal(1);
-    expect(web3.utils.hexToUtf8(profile.username)).to.be.equal("veeso_dev");
+    expect(web3.utils.hexToUtf8(profile.username)).to.be.equal("veeso_dev97A");
     expect(profile.avatarURI).to.be.equal("");
 
     const userProfile = await userStorage.getUserProfile();
     expect(userProfile.id).to.be.equal(1);
-    expect(web3.utils.hexToUtf8(userProfile.username)).to.be.equal("veeso_dev");
+    expect(web3.utils.hexToUtf8(userProfile.username)).to.be.equal(
+      "veeso_dev97A"
+    );
     expect(userProfile.avatarURI).to.be.equal("");
   });
 
@@ -64,6 +66,20 @@ describe("UserStorage", function () {
     const { userStorage } = await deployContract();
     await userStorage.createProfile("veeso_dev");
     await expect(userStorage.createProfile("veeso_dev")).to.be.rejectedWith(
+      Error
+    );
+  });
+
+  it("should return error username too long", async () => {
+    const { userStorage } = await deployContract();
+    await expect(
+      userStorage.createProfile("veeso_dev000000000000000000000000000")
+    ).to.be.rejectedWith(Error);
+  });
+
+  it("should return error for invalid username", async () => {
+    const { userStorage } = await deployContract();
+    await expect(userStorage.createProfile("veeso.dev")).to.be.rejectedWith(
       Error
     );
   });
@@ -100,7 +116,7 @@ describe("UserStorage", function () {
     await userStorage.createProfile("veeso_dev");
     await userStorage
       .connect(otherAccount)
-      .createProfile("shibetoshi.nakamoto");
+      .createProfile("shibetoshi_nakamoto");
     await userStorage.follow(2);
     // check following
     const following = await userStorage.getFollowing(1);
@@ -140,7 +156,7 @@ describe("UserStorage", function () {
     await userStorage.createProfile("veeso_dev");
     await userStorage
       .connect(otherAccount)
-      .createProfile("shibetoshi.nakamoto");
+      .createProfile("shibetoshi_nakamoto");
     await userStorage.follow(2);
     await userStorage.follow(2);
     // check following
@@ -159,7 +175,7 @@ describe("UserStorage", function () {
     await userStorage.createProfile("veeso_dev");
     await userStorage
       .connect(otherAccount)
-      .createProfile("shibetoshi.nakamoto");
+      .createProfile("shibetoshi_nakamoto");
     await userStorage.follow(BigNumber.from(2));
     // unfollow
     await userStorage.unfollow(BigNumber.from(2));
