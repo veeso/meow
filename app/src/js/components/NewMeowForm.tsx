@@ -121,7 +121,7 @@ const NewMeowForm = (props: Props) => {
                 role="status"
                 aria-hidden="true"
               />
-              Meow
+              😻 Meow
             </Button>
           </ButtonContainer>
         </Form>

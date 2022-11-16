@@ -249,7 +249,7 @@ const Meow = (props: Props) => {
                   >
                     <Action onClick={remeow}>
                       <ArrowPathIcon width={16} />
-                      <ActionLabel>Remeow</ActionLabel>
+                      <ActionLabel>🐈 Remeow</ActionLabel>
                     </Action>
                   </Col>
                 </Row>
