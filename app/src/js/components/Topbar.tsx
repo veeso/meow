@@ -2,7 +2,6 @@ import * as React from "react";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components";
 import SearchResult from "../lib/model/search";
-import Logo from "./Topbar/Logo";
 import MetamaskConnect from "./MetamaskConnect";
 import Search from "./Search";
 import Profile from "../lib/model/profile";
@@ -11,6 +10,7 @@ import Avatar from "./Topbar/Avatar";
 import { DEFAULT_AVATAR_URI } from "../lib/const";
 import { Container, Row, Col } from "react-bootstrap";
 import { HomeIcon } from "@heroicons/react/24/solid";
+import Image from "react-bootstrap/Image";
 
 const DesktopHeader = styled.header`
   align-items: center;
@@ -42,6 +42,10 @@ const LogoSection = styled.div`
   :hover {
     cursor: pointer;
   }
+`;
+
+const Logo = styled(Image)`
+  height: 1.5em;
 `;
 
 const Title = styled.h1`
@@ -111,7 +115,7 @@ const Topbar = (props: Props) => {
     <>
       <DesktopHeader>
         <LogoSection onClick={() => navigate("/")}>
-          <Logo />
+          <Logo src="/assets/images/meow.png" />
           <Title>Meow</Title>
         </LogoSection>
 

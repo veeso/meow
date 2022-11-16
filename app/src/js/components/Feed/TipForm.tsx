@@ -14,9 +14,8 @@ const Image = styled(BootstrapImage)`
 const Username = styled.p`
   align-self: center;
   color: #444;
-  flex: 0.8;
+  font-size: 1.2em;
   font-weight: 200;
-  font-size: 1.8em;
 `;
 
 const ButtonContainer = styled.div`
@@ -27,6 +26,8 @@ const ButtonContainer = styled.div`
 `;
 
 const ToastHeader = styled(Toast.Header)`
+  justify-content: space-around;
+  width: 100%;
   button {
     justify-self: end;
   }
