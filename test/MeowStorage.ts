@@ -70,6 +70,7 @@ describe("MeowStorage", function () {
       JSON.stringify(["polygon", "web3", "solidity", "blockchain"])
     );
     expect(meow.meow.epoch).to.be.equal(1668175551);
+    expect(meow.remeowedId.toNumber()).to.be.equal(0);
   });
 
   it("Should emit event on post", async () => {
@@ -121,5 +122,47 @@ describe("MeowStorage", function () {
     );
     const lastId = await meowStorage.getLastMeowId();
     expect(lastId.toNumber()).to.be.equal(1);
+  });
+
+  it("should remeow", async () => {
+    const { meowStorage, userStorage } = await deployContract();
+    // create test user
+    await userStorage.createProfile("veeso_dev");
+
+    await meowStorage.publish(
+      "Hello, world! I'm sending this from my #polygon wallet! #web3 #solidity #blockchain",
+      ["polygon", "web3", "solidity", "blockchain"],
+      1668175551
+    );
+    await meowStorage.remeow(BigNumber.from(1), 1668175551);
+    const meow = await meowStorage.getMeowById(BigNumber.from(2));
+    expect(meow.meow.id.toNumber()).to.be.equal(2);
+    expect(meow.profile.id.toNumber()).to.be.equal(1);
+    expect(meow.meow.text).to.be.equal("");
+    expect(meow.meow.hashtags.length).to.be.equal(0);
+    expect(meow.meow.epoch).to.be.equal(1668175551);
+    expect(meow.remeowedId.toNumber()).to.be.equal(1);
+  });
+
+  it("should return error if user doesn't exist on remeow", async () => {
+    const { meowStorage, otherAccount, userStorage } = await deployContract();
+    await userStorage.createProfile("veeso_dev");
+
+    await meowStorage.publish(
+      "Hello, world! I'm sending this from my #polygon wallet! #web3 #solidity #blockchain",
+      ["polygon", "web3", "solidity", "blockchain"],
+      1668175551
+    );
+    await expect(
+      meowStorage.connect(otherAccount).remeow(BigNumber.from(1), 1668175551)
+    ).to.be.rejectedWith(Error);
+  });
+
+  it("should return error when remeowing unexisting meow", async () => {
+    const { meowStorage, userStorage } = await deployContract();
+    await userStorage.createProfile("veeso_dev");
+    await expect(
+      meowStorage.remeow(BigNumber.from(5), 1668175551)
+    ).to.be.rejectedWith(Error);
   });
 });

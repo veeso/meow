@@ -24,13 +24,18 @@ contract MeowStorage is BaseStorage {
 
     uint256 lastMeowId;
 
+    /// @notice struct to return when requesting a meow
+    /// @dev remeowedId refers to the original meow this meow refers to. If 0, this is the original meow
     struct MeowWithProfile {
         Meow meow;
         UserStorage.Profile profile;
+        uint256 remeowedId;
     }
 
     // map between meow id and meow entity
     mapping(uint256 => Meow) meows;
+    // remeow association (remeow_id => original_meow_id)
+    mapping(uint256 => uint256) remeows;
 
     // Mapping of Meow id to the profile id of the author
     mapping(uint256 => uint256) meowToProfile;
@@ -62,6 +67,27 @@ contract MeowStorage is BaseStorage {
         emit MeowPublished(_profileId, lastMeowId);
     }
 
+    function remeow(uint256 _meowId, uint128 _epoch) external {
+        // meow must exist
+        require(meows[_meowId].id != 0);
+        // get manager
+        ContractManager _manager = ContractManager(managerAddr);
+        // retrieve address for user storage
+        address _userStorageAddr = _manager.getAddress("UserStorage");
+        UserStorage _userStorage = UserStorage(_userStorageAddr);
+        // user must exist
+        require(_userStorage.profileExists(tx.origin));
+        uint256 _profileId = _userStorage.addressToId(tx.origin);
+        // increase id by 1
+        lastMeowId++;
+        string[] memory hashtags = new string[](0);
+        meows[lastMeowId] = Meow(lastMeowId, "", hashtags, _epoch);
+        meowToProfile[lastMeowId] = _profileId;
+        // save remeow
+        remeows[lastMeowId] = _meowId;
+        emit MeowPublished(_profileId, lastMeowId);
+    }
+
     /// @notice get meow by id
     /// @param _id meow id
     /// @return meow associated to the id
@@ -80,7 +106,8 @@ contract MeowStorage is BaseStorage {
         return
             MeowWithProfile(
                 meows[_id],
-                _userStorage.getProfile(meowToProfile[_id])
+                _userStorage.getProfile(meowToProfile[_id]),
+                remeows[_id]
             );
     }
 
