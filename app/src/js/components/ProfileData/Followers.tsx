@@ -20,6 +20,10 @@ const Username = styled(Link)`
   font-weight: 200;
   text-decoration: none;
 
+  @media screen and (max-width: 640px) {
+    font-size: 1.8em;
+  }
+
   :hover {
     cursor: pointer;
     text-decoration: none;
@@ -72,10 +76,10 @@ const Followers = (props: Props) => {
       <ListGroup.Item key={profile.id.toString()}>
         <Container fluid>
           <Row>
-            <Col lg={3}>
+            <Col xs={4} lg={3}>
               <Image src={profile.avatarURI} roundedCircle thumbnail />
             </Col>
-            <Col lg={9}>
+            <Col xs={8} lg={9}>
               <Username to={`/profile/${profile.id.toString()}`}>
                 {profile.username}
               </Username>

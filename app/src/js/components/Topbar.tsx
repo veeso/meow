@@ -9,8 +9,10 @@ import Profile from "../lib/model/profile";
 import { Link, useNavigate } from "react-router-dom";
 import Avatar from "./Topbar/Avatar";
 import { DEFAULT_AVATAR_URI } from "../lib/const";
+import { Container, Row, Col } from "react-bootstrap";
+import { HomeIcon } from "@heroicons/react/24/solid";
 
-const Header = styled.header`
+const DesktopHeader = styled.header`
   align-items: center;
   background-color: white;
   border-bottom: 1px solid #ccc;
@@ -20,6 +22,17 @@ const Header = styled.header`
   justify-content: space-between;
   min-height: 8vh;
   width: 100%;
+
+  @media screen and (max-width: 640px) {
+    display: none;
+  }
+`;
+
+const MobileHeader = styled.header`
+  display: none;
+  @media screen and (max-width: 640px) {
+    display: block;
+  }
 `;
 
 const LogoSection = styled.div`
@@ -73,6 +86,16 @@ const WalletSection = styled.div`
   text-align: right;
 `;
 
+const HomeCol = styled(Col)`
+  display: flex;
+  text-align: center;
+  vertical-align: middle;
+
+  :active {
+    color: royalblue;
+  }
+`;
+
 interface Props {
   search: (subject: string) => Promise<Array<SearchResult>>;
   profile?: Profile;
@@ -85,25 +108,41 @@ const Topbar = (props: Props) => {
     : DEFAULT_AVATAR_URI;
 
   return (
-    <Header>
-      <LogoSection onClick={() => navigate("/")}>
-        <Logo />
-        <Title>Meow</Title>
-      </LogoSection>
+    <>
+      <DesktopHeader>
+        <LogoSection onClick={() => navigate("/")}>
+          <Logo />
+          <Title>Meow</Title>
+        </LogoSection>
 
-      <SearchSection hidden={props.profile === undefined}>
-        <Search onSearch={props.search} />
-      </SearchSection>
-      <WalletSection className="wallet-connect">
-        <MetamaskConnect />
-      </WalletSection>
-      <Profile hidden={props.profile === undefined}>
-        <Avatar uri={avatarURI} />
-        <ProfileLink to={`/profile/${props.profile?.id}`}>
-          {props.profile?.username}
-        </ProfileLink>
-      </Profile>
-    </Header>
+        <SearchSection hidden={props.profile === undefined}>
+          <Search onSearch={props.search} />
+        </SearchSection>
+        <WalletSection className="wallet-connect">
+          <MetamaskConnect />
+        </WalletSection>
+        <Profile hidden={props.profile === undefined}>
+          <Avatar uri={avatarURI} />
+          <ProfileLink to={`/profile/${props.profile?.id}`}>
+            {props.profile?.username}
+          </ProfileLink>
+        </Profile>
+      </DesktopHeader>
+      <MobileHeader>
+        <Container fluid>
+          <Row>
+            <HomeCol xs={2} onClick={() => navigate("/")}>
+              <HomeIcon width={32} />
+            </HomeCol>
+            <Col xs={10}>
+              <div hidden={props.profile === undefined}>
+                <Search onSearch={props.search} />
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </MobileHeader>
+    </>
   );
 };
 

@@ -2,12 +2,11 @@ import * as React from "react";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components";
 import Spinner from "react-bootstrap/Spinner";
+import { Container } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import MeowModel from "../../lib/model/meow";
 import Meow from "./Meow";
-
-const Container = styled.div``;
 
 const SpinnerContainer = styled.div`
   display: flex;
@@ -40,7 +39,7 @@ const List = (props: Props) => {
     props.meows.length % props.loadPerFetch === 0 && props.meows.length > 0;
 
   return (
-    <Container>
+    <Container fluid>
       <InfiniteScroll
         dataLength={props.meows.length}
         hasMore={hasMore}

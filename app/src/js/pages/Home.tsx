@@ -10,18 +10,7 @@ import Profile from "../lib/model/profile";
 import Web3Client from "../lib/web3/client";
 import Meow from "../lib/model/meow";
 import MeowStorage from "../lib/middleware/MeowStorage";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-left: 25%;
-  width: 50%;
-
-  @media screen and (max-width: 640px) {
-    margin-left: 0;
-    width: 100%;
-`;
+import { Col, Container, Row } from "react-bootstrap";
 
 interface Props {
   profile: Profile;
@@ -48,13 +37,18 @@ const Home = (props: Props) => {
   };
 
   return (
-    <Container>
-      <NewMeowForm
-        profileId={props.profile.id}
-        avatarURI={props.profile.avatarURI}
-        onSubmit={publishMeow}
-      />
-      <Feed loadMeows={loadMeows} />
+    <Container fluid>
+      <Row>
+        <Col sm={12} lg={{ span: 6, offset: 3 }}>
+          <NewMeowForm
+            profileId={props.profile.id}
+            avatarURI={props.profile.avatarURI}
+            onSubmit={publishMeow}
+          />
+          <Feed loadMeows={loadMeows} />
+        </Col>
+        <Col sm={12} lg={3}></Col>
+      </Row>
     </Container>
   );
 };

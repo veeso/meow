@@ -18,6 +18,7 @@ const Container = styled.div`
   @media screen and (max-width: 640px) {
     margin-left: 0;
     width: 100%;
+  }
 `;
 
 interface Props {

@@ -20,11 +20,21 @@ const Container = styled.div`
   @media screen and (max-width: 640px) {
     margin-left: 0;
     width: 100%;
+  }
 `;
 
 const Title = styled.p`
   font-size: 2em;
   font-weight: 200;
+
+  strong {
+    color: dodgerblue;
+  }
+
+  @media screen and (max-width: 640px) {
+    font-size: 1.5em;
+    text-align: center;
+  }
 `;
 
 const Tag = () => {
@@ -44,7 +54,9 @@ const Tag = () => {
 
   return (
     <Container>
-      <Title>#{params.tag}</Title>
+      <Title>
+        Latest meows tagged with <strong>#{params.tag}</strong>
+      </Title>
       <Feed loadMeows={loadMeows} />
     </Container>
   );

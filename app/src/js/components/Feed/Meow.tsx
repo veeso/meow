@@ -4,14 +4,19 @@ import styled from "styled-components";
 import BootstrapImage from "react-bootstrap/Image";
 import { Link } from "react-router-dom";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
-import { Alert, Col, Row } from "react-bootstrap";
 import { useConnectedMetaMask } from "metamask-react";
+import {
+  Alert,
+  Col,
+  Container as BootstrapContainer,
+  Row,
+} from "react-bootstrap";
 
 import Meow from "../../lib/model/meow";
 import Web3Client from "../../lib/web3/client";
 import MeowStorage from "../../lib/middleware/MeowStorage";
 
-const Container = styled.div`
+const Container = styled(BootstrapContainer)`
   padding: 4px 8px;
   border-bottom: 1px solid #eee;
 `;
@@ -20,11 +25,7 @@ const RemeowContainer = styled.div`
   padding: 0 4px 4px 4px;
 `;
 
-const MeowContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 24px;
-`;
+const MeowContainer = styled(BootstrapContainer)``;
 
 const RemeowLink = styled(Link)`
   color: #888;
@@ -48,13 +49,6 @@ const Image = styled(BootstrapImage)`
 `;
 
 const ContentColumn = styled.div``;
-
-const MeowHeader = styled.div`
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  gap: 24px;
-`;
 
 const Username = styled.span`
   color: #404040;
@@ -200,48 +194,72 @@ const Meow = (props: Props) => {
   const profileRoute = `/profile/${meow.profile.id}`;
 
   return (
-    <Container>
+    <Container fluid>
       <RemeowContainer hidden={!isRemeow}>
         <RemeowLink to={remeowProfileRoute}>
           <ArrowPathIcon width={16} /> {originalMeow.profile.username} has
           remeowed
         </RemeowLink>
       </RemeowContainer>
-      <MeowContainer>
-        <AvatarColumn>
-          <Link to={profileRoute}>
-            <Image
-              width={64}
-              roundedCircle
-              thumbnail
-              src={meow.profile.avatarURI}
-            />
-          </Link>
-        </AvatarColumn>
-        <ContentColumn>
-          <MeowHeader>
-            <Username>
-              <Link to={profileRoute}>{meow.profile.username}</Link>
-            </Username>
-            <PublishedDate>{meow.date.toLocaleString()}</PublishedDate>
-          </MeowHeader>
-          <MeowContent>{renderContent(meow.text)}</MeowContent>
-          <ActionContainer>
-            <Row>
-              <Col
-                hidden={props.meow.profile.id === props.meow.remeow?.profile.id}
-              >
-                <Action onClick={remeow}>
-                  <ArrowPathIcon width={16} />
-                  <ActionLabel>Remeow</ActionLabel>
-                </Action>
-              </Col>
-            </Row>
-          </ActionContainer>
-          <Alert hidden={!actionError} variant="danger">
-            {actionError}
-          </Alert>
-        </ContentColumn>
+      <MeowContainer fluid>
+        <Row>
+          <Col lg={2}>
+            <AvatarColumn>
+              <Link to={profileRoute}>
+                <Image
+                  width={64}
+                  roundedCircle
+                  thumbnail
+                  src={meow.profile.avatarURI}
+                />
+              </Link>
+            </AvatarColumn>
+          </Col>
+          <Col>
+            <ContentColumn>
+              <BootstrapContainer fluid>
+                <Row>
+                  <Col xs={13} lg={8}>
+                    <Username>
+                      <Link to={profileRoute}>{meow.profile.username}</Link>
+                    </Username>
+                  </Col>
+                  <Col>
+                    <PublishedDate>{meow.date.toLocaleString()}</PublishedDate>
+                  </Col>
+                </Row>
+              </BootstrapContainer>
+            </ContentColumn>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={{ offset: 2 }}>
+            <MeowContent>{renderContent(meow.text)}</MeowContent>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={{ offset: 2 }}>
+            <ContentColumn>
+              <ActionContainer>
+                <Row>
+                  <Col
+                    hidden={
+                      props.meow.profile.id === props.meow.remeow?.profile.id
+                    }
+                  >
+                    <Action onClick={remeow}>
+                      <ArrowPathIcon width={16} />
+                      <ActionLabel>Remeow</ActionLabel>
+                    </Action>
+                  </Col>
+                </Row>
+              </ActionContainer>
+              <Alert hidden={!actionError} variant="danger">
+                {actionError}
+              </Alert>
+            </ContentColumn>
+          </Col>
+        </Row>
       </MeowContainer>
     </Container>
   );

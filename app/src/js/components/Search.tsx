@@ -16,6 +16,10 @@ const Container = styled.div`
   margin: 8px 0;
   position: relative;
 
+  @media screen and (max-width: 640px) {
+    border-radius: 6px;
+  }
+
   input {
     border: 0;
     :focus {

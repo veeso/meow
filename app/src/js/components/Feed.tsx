@@ -3,16 +3,17 @@ import { Alert } from "react-bootstrap";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components";
 import { BigNumber } from "ethers";
+import BootstrapContainer from "react-bootstrap/Container";
 
 import Meow from "../lib/model/meow";
 import List from "./Feed/List";
 import Loader from "./Feed/Loader";
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+const Container = styled(BootstrapContainer)`
   padding: 0 32px;
+  @media screen and (max-width: 640px) {
+    padding: 0;
+  }
 `;
 
 const MEOWS_TO_LOAD_COUNT = 32;
@@ -67,7 +68,7 @@ const Feed = (props: Props) => {
     }
   }, [loading]);
 
-  return <Container>{render()}</Container>;
+  return <Container fluid>{render()}</Container>;
 };
 
 export default hot(Feed);
