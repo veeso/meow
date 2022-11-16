@@ -4,7 +4,6 @@ import { AbiItem } from "web3-utils";
 
 import {
   ABI as MEOW_STORAGE_ABI,
-  Meow,
   MeowWithProfile,
   MEOW_STORAGE_ADDRESS,
 } from "./contracts/MeowStorage";
@@ -81,6 +80,13 @@ export default class Web3Client {
   async setAvatar(avatarURI: string): Promise<void> {
     const contract = this.userStorageContract();
     return contract.methods.setAvatar(avatarURI).send({ from: this.address });
+  }
+
+  async sendTip(wei: string, profileId: BigNumber): Promise<void> {
+    const contract = this.userStorageContract();
+    return contract.methods
+      .sendTip(profileId)
+      .send({ from: this.address, value: wei });
   }
 
   async publishMeow(

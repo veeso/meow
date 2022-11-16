@@ -84,7 +84,7 @@ const Profile = (props: Props) => {
   return (
     <Container>
       <Header>{profileData}</Header>
-      <Feed loadMeows={loadMeows} />
+      <Feed profileId={props.userProfile.id} loadMeows={loadMeows} />
     </Container>
   );
 };

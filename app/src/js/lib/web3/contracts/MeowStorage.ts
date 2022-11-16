@@ -206,7 +206,7 @@ export const ABI = [
 ];
 
 export const MEOW_STORAGE_ADDRESS =
-  "0xA404a76df3911642A52dF14F88ca2d5D2412Fb74";
+  "0x846154dac2fa9d2F886309C6352Fcee6b9c747d9";
 
 // types
 

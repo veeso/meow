@@ -4,7 +4,9 @@ import styled from "styled-components";
 import BootstrapImage from "react-bootstrap/Image";
 import { Link } from "react-router-dom";
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
+import { CurrencyDollarIcon } from "@heroicons/react/24/outline";
 import { useConnectedMetaMask } from "metamask-react";
+import { BigNumber } from "ethers";
 import {
   Alert,
   Col,
@@ -15,6 +17,7 @@ import {
 import Meow from "../../lib/model/meow";
 import Web3Client from "../../lib/web3/client";
 import MeowStorage from "../../lib/middleware/MeowStorage";
+import Profile from "../../lib/model/profile";
 
 const Container = styled(BootstrapContainer)`
   padding: 4px 8px;
@@ -118,6 +121,8 @@ const ActionLabel = styled.span`
 
 interface Props {
   meow: Meow;
+  onTip: (profile: Profile) => void;
+  userProfileId: BigNumber;
 }
 
 const Meow = (props: Props) => {
@@ -190,6 +195,10 @@ const Meow = (props: Props) => {
       });
   };
 
+  const onTip = () => {
+    props.onTip(originalMeow.profile);
+  };
+
   const remeowProfileRoute = `/profile/${originalMeow.profile.id}`;
   const profileRoute = `/profile/${meow.profile.id}`;
 
@@ -243,13 +252,27 @@ const Meow = (props: Props) => {
               <ActionContainer>
                 <Row>
                   <Col
-                    hidden={
-                      props.meow.profile.id === props.meow.remeow?.profile.id
-                    }
+                    xs={6}
+                    lg={4}
+                    hidden={props.meow.profile.id.eq(
+                      props.meow.remeow
+                        ? props.meow.remeow.profile.id
+                        : BigNumber.from(0)
+                    )}
                   >
                     <Action onClick={remeow}>
                       <ArrowPathIcon width={16} />
                       <ActionLabel>🐈 Remeow</ActionLabel>
+                    </Action>
+                  </Col>
+                  <Col
+                    xs={6}
+                    lg={4}
+                    hidden={props.meow.profile.id.eq(props.userProfileId)}
+                  >
+                    <Action onClick={onTip}>
+                      <CurrencyDollarIcon width={16} />
+                      <ActionLabel>Send tip</ActionLabel>
                     </Action>
                   </Col>
                 </Row>

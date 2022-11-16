@@ -9,6 +9,7 @@ import Feed from "../components/Feed";
 import Web3Client from "../lib/web3/client";
 import Meow from "../lib/model/meow";
 import MeowStorage from "../lib/middleware/MeowStorage";
+import Profile from "../lib/model/profile";
 
 const Container = styled.div`
   display: flex;
@@ -37,7 +38,11 @@ const Title = styled.p`
   }
 `;
 
-const Tag = () => {
+interface Props {
+  userProfile: Profile;
+}
+
+const Tag = (props: Props) => {
   const { account, ethereum } = useConnectedMetaMask();
   const params = useParams();
 
@@ -57,7 +62,7 @@ const Tag = () => {
       <Title>
         Latest meows tagged with <strong>#{params.tag}</strong>
       </Title>
-      <Feed loadMeows={loadMeows} />
+      <Feed profileId={props.userProfile.id} loadMeows={loadMeows} />
     </Container>
   );
 };

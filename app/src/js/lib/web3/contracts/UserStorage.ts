@@ -266,6 +266,19 @@ export const ABI = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "_profileId",
+        type: "uint256",
+      },
+    ],
+    name: "sendTip",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "string",
         name: "_avatarURI",
         type: "string",
@@ -331,7 +344,7 @@ export const ABI = [
 ];
 
 export const USER_STORAGE_ADDRESS =
-  "0xd0D5954a5572742c30C174FA2EF5C05FA1a4d586";
+  "0x08c31DcD497E2d645b8D391bE2cF5Ab49eAdbAEF";
 
 export interface Profile {
   id: string;

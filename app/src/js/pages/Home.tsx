@@ -1,6 +1,5 @@
 import * as React from "react";
 import { hot } from "react-hot-loader/root";
-import styled from "styled-components";
 import { useConnectedMetaMask } from "metamask-react";
 import { BigNumber } from "ethers";
 
@@ -45,7 +44,7 @@ const Home = (props: Props) => {
             avatarURI={props.profile.avatarURI}
             onSubmit={publishMeow}
           />
-          <Feed loadMeows={loadMeows} />
+          <Feed profileId={props.profile.id} loadMeows={loadMeows} />
         </Col>
         <Col sm={12} lg={3}></Col>
       </Row>

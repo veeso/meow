@@ -1,11 +1,7 @@
 import * as React from "react";
 import { hot } from "react-hot-loader/root";
 import styled from "styled-components";
-import autosize from "autosize";
-import Alert from "react-bootstrap/Alert";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import BootstrapImage from "react-bootstrap/Image";
 import ProgressBar from "react-bootstrap/ProgressBar";
 
 const Container = styled.div`

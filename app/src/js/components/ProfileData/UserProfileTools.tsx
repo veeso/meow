@@ -1,7 +1,7 @@
 import * as React from "react";
 import Container from "react-bootstrap/esm/Container";
 import { hot } from "react-hot-loader/root";
-import { Row, Col, Button, Popover, Form, Toast } from "react-bootstrap";
+import { Row, Col, Button, Form, Toast } from "react-bootstrap";
 import { useConnectedMetaMask } from "metamask-react";
 import { CameraIcon, PencilIcon } from "@heroicons/react/24/outline";
 import Spinner from "react-bootstrap/Spinner";

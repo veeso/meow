@@ -7,6 +7,8 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 import MeowModel from "../../lib/model/meow";
 import Meow from "./Meow";
+import { BigNumber } from "ethers";
+import Profile from "../../lib/model/profile";
 
 const SpinnerContainer = styled.div`
   display: flex;
@@ -18,11 +20,18 @@ interface Props {
   loadMoreMeows: () => void;
   meows: Array<MeowModel>;
   loadPerFetch: number;
+  onTip: (profile: Profile) => void;
+  userProfileId: BigNumber;
 }
 
 const List = (props: Props) => {
   const meows = props.meows.map((meow) => (
-    <Meow key={meow.id.toString()} meow={meow} />
+    <Meow
+      key={meow.id.toString()}
+      meow={meow}
+      onTip={props.onTip}
+      userProfileId={props.userProfileId}
+    />
   ));
   const [lastMeowLength, setLastMeowLength] = React.useState<number>(
     meows.length

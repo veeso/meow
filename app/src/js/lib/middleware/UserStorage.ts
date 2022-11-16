@@ -5,6 +5,7 @@ import Web3Client from "../web3/client";
 import web3 from "web3";
 import { Profile as ProfileEth } from "../web3/contracts/UserStorage";
 import { DEFAULT_AVATAR_URI } from "../const";
+import Web3 from "web3";
 
 const ZERO = BigNumber.from(0);
 export default class UserStorage {
@@ -59,6 +60,11 @@ export default class UserStorage {
 
   async setAvatar(avatarURI: string): Promise<void> {
     return this.client.setAvatar(avatarURI);
+  }
+
+  async sendTip(tip: number, profileId: BigNumber): Promise<void> {
+    const wei = Web3.utils.toWei(tip.toString());
+    return this.client.sendTip(wei, profileId);
   }
 
   async searchUser(query: string, maxResults: number): Promise<Array<Profile>> {

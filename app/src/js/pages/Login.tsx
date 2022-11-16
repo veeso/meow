@@ -46,7 +46,11 @@ const Login = (props: Props) => {
         throw new Error(`failed to connect to metamask: ${e.message}`);
       }
     } else {
-      signUp(username);
+      try {
+        await signUp(username);
+      } catch (e: any) {
+        throw new Error(`failed to connect to sign up: ${e.message}`);
+      }
     }
   };
 

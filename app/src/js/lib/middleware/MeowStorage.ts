@@ -59,7 +59,6 @@ export default class MeowStorage {
     const lastMeowId = BigNumber.from(await this.client.getLastMeowId());
     const result = new Array();
     let resultIndex = BigNumber.from(0);
-    console.log(resultIndex.sub(1).toNumber());
     let arrayCursor: BigNumber = lastMeowId.sub(offset);
     for (
       let i = arrayCursor;
@@ -126,7 +125,6 @@ export default class MeowStorage {
       i = i.sub(1)
     ) {
       const meow = await this.client.getMeowById(i);
-      console.log(meow.meow.hashtags);
       if (meow.meow.hashtags.includes(hashtag)) {
         result.push(await this.adaptMeowWithProfile(meow));
         resultIndex = resultIndex.add(1);
